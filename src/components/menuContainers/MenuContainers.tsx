@@ -4,11 +4,9 @@ function MenuContainers({ state }: any) {
   const [menus, setMenus] = state;
 
   const changeInfo = (info: any) => {
-    console.log('test', info);
     const newRequests = [];
     for (let i = 0; i < menus.length; i++) {
       const element = menus[i];
-      console.log(element.id === info.id);
       if (element.id === info.id) {
         newRequests.push(info);
       } else {

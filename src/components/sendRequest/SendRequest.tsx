@@ -4,8 +4,6 @@ import { useState } from 'react';
 function SendRequest({ requests }: { requests: any }) {
   const [text, setText] = useState('');
 
-  const generateMessage = () => setText(FormatCartToText(requests));
-
   return (
     <div className="w-full my-4 flex flex-col items-center">
       <a

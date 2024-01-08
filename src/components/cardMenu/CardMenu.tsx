@@ -15,7 +15,7 @@ function CardMenu({ info, changeInfo }: any) {
             value={info?.price}
             placeholder="Precio"
             onChange={(e) => changeInfo({ ...info, price: e.target.value })}
-            className={`w-12 h-8 mr-3 inline-flex items-center justify-center bg-gray-700 border-gray-700 rounded border text-white flex-shrink-0 ${
+            className={`w-9/12 h-8 mr-3 inline-flex items-center justify-center bg-gray-700 border-gray-700 rounded border text-white flex-shrink-0 ${
               isEdit ? '!border-white' : ''
             }`}
           />

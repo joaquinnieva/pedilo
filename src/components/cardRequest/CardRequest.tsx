@@ -6,9 +6,12 @@ function CardRequest({ info, menus, onChangeReq }: any) {
 
   const selectMenu = (e: any) => {
     const menu = e.target.value;
-    if (menu === 'Selecciona') return;
-    const menuselected = menus.find((menuItem: any) => menuItem.menu === menu);
-    onChangeReq({ ...info, menu, price: menuselected.price });
+    if (menu === 'Selecciona') {
+      onChangeReq({ ...info, menu: 'Selecciona', price: 0 });
+    } else {
+      const menuselected = menus.find((menuItem: any) => menuItem.menu === menu);
+      onChangeReq({ ...info, menu, price: menuselected.price });
+    }
   };
   return (
     <div className="p-4 w-1/4">
