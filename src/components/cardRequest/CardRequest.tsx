@@ -1,7 +1,11 @@
+import { db } from '@/firebase/config';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { IconCheck, IconEdit } from '..';
+import IconClose from '../iconClose/IconClose';
 
-function CardRequest({ info, menus, onChangeReq }: any) {
+function CardRequest({ info, menus, onChangeReq, deleteMenu }: any) {
   const [isEdit, setIsEdit] = useState(false);
 
   const selectMenu = (e: any) => {
@@ -13,9 +17,20 @@ function CardRequest({ info, menus, onChangeReq }: any) {
       onChangeReq({ ...info, menu, price: menuselected.price });
     }
   };
+
+  const acceptEdition = () => {
+    setIsEdit(!isEdit);
+    if (!isEdit) return;
+    toast.promise(updateDoc(doc(db, 'requests', info.id), info), {
+      loading: 'Editando...',
+      success: <b>Editando correctamente!</b>,
+      error: <b>No se pudo editar.</b>,
+    });
+  };
   return (
     <div className="p-4 w-1/4">
-      <div className="flex rounded-lg h-full bg-gray-700 p-8 flex-col">
+      <div className="flex rounded-lg h-full bg-gray-700 p-8 flex-col relative">
+        <IconClose className="absolute top-0 right-0 m-2 cursor-pointer" onClick={() => deleteMenu(info.id)} />
         <div className="flex items-center mb-3 relative">
           <input
             readOnly={!isEdit}
@@ -27,7 +42,7 @@ function CardRequest({ info, menus, onChangeReq }: any) {
               isEdit ? '!border-white' : ''
             }`}
           />
-          <div className="absolute right-0 cursor-pointer" onClick={() => setIsEdit(!isEdit)}>
+          <div className="absolute right-0 cursor-pointer" onClick={acceptEdition}>
             {!isEdit ? <IconEdit /> : <IconCheck />}
           </div>
         </div>

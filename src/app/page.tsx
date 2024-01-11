@@ -1,11 +1,22 @@
 'use client';
 import { MenuContainers, RequestContainer, Separator } from '@/components';
 import SendRequest from '@/components/sendRequest/SendRequest';
-import { useState } from 'react';
+import { getMenus, getRequests } from '@/firebase/service';
+import { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
-  const [menus, setMenus] = useState([{ id: 1, menu: 'Menu 1', price: 2500 }]);
-  const [requests, setRequests] = useState([{ id: 1, name: 'Nombre', type: 'Efectivo' }]);
+  const [menus, setMenus] = useState<any>([]);
+  const [requests, setRequests] = useState<any>([]);
+
+  const getData = async () => {
+    setMenus(await getMenus());
+    setRequests(await getRequests());
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <main className="flex min-h-screen flex-col items-center p-12">
       <Separator>Menus</Separator>
@@ -13,6 +24,7 @@ export default function Home() {
       <Separator>Pedidos</Separator>
       <RequestContainer state={[requests, setRequests]} menus={menus} />
       <SendRequest requests={requests} />
+      <Toaster />
     </main>
   );
 }
