@@ -17,13 +17,13 @@ export default function Home() {
     getData();
   }, []);
   return (
-    <main className="flex min-h-screen flex-col items-center p-4">
+    <main className="flex min-h-screen flex-col bg-neutral items-center p-4">
       <Separator>Menus</Separator>
       <MenuContainers state={[menus, setMenus]} />
       <Separator>Pedidos</Separator>
       <RequestContainer state={[requests, setRequests]} menus={menus} />
       <SendRequest requests={requests} />
-      <Toaster />
+      <Toaster position="top-right" />
     </main>
   );
 }

@@ -30,7 +30,7 @@ function CardRequest({ info, menus, onChangeReq, deleteMenu }: any) {
   };
   return (
     <div className="p-4 w-1/4">
-      <div className="flex rounded-lg h-full bg-gray-700 p-8 flex-col relative">
+      <div className="flex rounded-lg h-full bg-card p-8 flex-col relative">
         <IconClose className="absolute top-0 right-0 m-2 cursor-pointer" onClick={() => deleteMenu(info.id)} />
         <div className="flex items-center mb-3 relative">
           <input
@@ -39,7 +39,7 @@ function CardRequest({ info, menus, onChangeReq, deleteMenu }: any) {
             value={info?.name}
             placeholder="Nombre"
             onChange={(e) => onChangeReq({ ...info, name: e.target.value })}
-            className={`w-9/12 h-8 mr-3 px-1 inline-flex items-center justify-center bg-gray-700 border-gray-700 rounded border text-white flex-shrink-0 ${
+            className={`w-9/12 h-8 mr-3 px-1 inline-flex items-center justify-center bg-card border-card rounded border text-white flex-shrink-0 ${
               isEdit ? '!border-white' : ''
             }`}
           />
@@ -51,11 +51,11 @@ function CardRequest({ info, menus, onChangeReq, deleteMenu }: any) {
           <select
             onChange={(e) => onChangeReq({ ...info, type: e.target.value })}
             disabled={!isEdit}
-            className={`bg-gray-700 mb-3 rounded ${isEdit ? 'border' : ''}`}>
+            className={`bg-card mb-3 rounded ${isEdit ? 'border' : ''}`}>
             <option value={PayMethods.EFECTIVO}>{PayMethods.EFECTIVO}</option>
             <option value={PayMethods.TRANSFERENCIA}>{PayMethods.TRANSFERENCIA}</option>
           </select>
-          <select value={info?.menu} onChange={selectMenu} disabled={!isEdit} className={`bg-gray-700 rounded ${isEdit ? 'border' : ''}`}>
+          <select value={info?.menu} onChange={selectMenu} disabled={!isEdit} className={`bg-card rounded ${isEdit ? 'border' : ''}`}>
             <option value="Selecciona">Selecciona</option>
             {menus.map((menu: any, i: number) => (
               <option key={i} value={menu.menu}>

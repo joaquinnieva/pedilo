@@ -20,10 +20,10 @@ function CardMenu({ info, changeInfo, deleteMenu }: any) {
   };
 
   return (
-    <div className="p-4 w-1/4">
-      <div className="flex rounded-lg h-full bg-gray-700 p-8 flex-col relative">
+    <div className="p-4 w-1/4 text-white">
+      <div className="flex rounded-lg h-full bg-card p-8 flex-col relative">
         <IconClose className="absolute top-0 right-0 m-2 cursor-pointer" onClick={() => deleteMenu(info.id)} />
-        <div className="flex items-center mb-3 relative">
+        <div className="flex items-center mb-3 relative text-white">
           $
           <input
             readOnly={!isEdit}
@@ -31,7 +31,7 @@ function CardMenu({ info, changeInfo, deleteMenu }: any) {
             value={info?.price}
             placeholder="Precio"
             onChange={(e) => changeInfo({ ...info, price: e.target.value })}
-            className={`w-9/12 h-8 mr-3 inline-flex items-center justify-center bg-gray-700 border-gray-700 rounded border text-white flex-shrink-0 ${
+            className={`w-9/12 h-8 mr-3 inline-flex items-center justify-center bg-card border-card rounded border text-white flex-shrink-0 ${
               isEdit ? '!border-white' : ''
             }`}
           />
@@ -46,7 +46,7 @@ function CardMenu({ info, changeInfo, deleteMenu }: any) {
             value={info?.menu}
             placeholder="Menu"
             onChange={(e) => changeInfo({ ...info, menu: e.target.value })}
-            className={`w-full leading-relaxed text-base bg-gray-700 border-gray-700 rounded border ${isEdit ? '!border-white' : ''}`}
+            className={`w-full leading-relaxed text-base bg-card border-card rounded border ${isEdit ? '!border-white' : ''}`}
           />
         </div>
       </div>

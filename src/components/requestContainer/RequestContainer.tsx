@@ -52,7 +52,7 @@ function RequestContainer({ state, menus }: any) {
         <CardRequest key={i} info={info} menus={menus} onChangeReq={onChangeReq} deleteMenu={deleteMenu} />
       ))}
       <div className="p-4 w-1/4">
-        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-gray-700 p-8 justify-center items-center cursor-pointer">
+        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-card p-8 justify-center items-center cursor-pointer">
           <IconAdd /> Agregar pedido
         </div>
       </div>
