@@ -1,6 +1,5 @@
 'use client';
-import { MenuContainers, RequestContainer, Separator } from '@/components';
-import SendRequest from '@/components/sendRequest/SendRequest';
+import { MenuContainers, RequestContainer, SendRequest, Separator } from '@/components';
 import { getMenus, getRequests } from '@/firebase/service';
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -18,7 +17,7 @@ export default function Home() {
     getData();
   }, []);
   return (
-    <main className="flex min-h-screen flex-col items-center p-12">
+    <main className="flex min-h-screen flex-col items-center p-4">
       <Separator>Menus</Separator>
       <MenuContainers state={[menus, setMenus]} />
       <Separator>Pedidos</Separator>

@@ -1,3 +1,4 @@
+import { PayMethods } from '@/consts/PayMethods';
 import { db } from '@/firebase/config';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
@@ -51,8 +52,8 @@ function CardRequest({ info, menus, onChangeReq, deleteMenu }: any) {
             onChange={(e) => onChangeReq({ ...info, type: e.target.value })}
             disabled={!isEdit}
             className={`bg-gray-700 mb-3 rounded ${isEdit ? 'border' : ''}`}>
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
+            <option value={PayMethods.EFECTIVO}>{PayMethods.EFECTIVO}</option>
+            <option value={PayMethods.TRANSFERENCIA}>{PayMethods.TRANSFERENCIA}</option>
           </select>
           <select value={info?.menu} onChange={selectMenu} disabled={!isEdit} className={`bg-gray-700 rounded ${isEdit ? 'border' : ''}`}>
             <option value="Selecciona">Selecciona</option>
