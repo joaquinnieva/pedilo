@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "explorer http://localhost:3000 & next dev",
+    "dev": "explorer http://localhost:3000 & next dev",
     "build": "next build",
     "prod": "next start",
     "lint": "next lint"
@@ -14,6 +15,7 @@
     "framer-motion": "10.18.0",
     "next": "14.0.4",
     "react": "18",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "18",
     "react-hot-toast": "2.4.1"
   },
