@@ -43,12 +43,12 @@ function RequestModal({ spinOptions }: Props) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         className='bg-card'
-        size='lg'
+        size='3xl'
       >
-        <ModalContent>
+        <ModalContent className='grid place-items-center'>
           {(onClose) => (
             <>
-              <ModalHeader className='flex flex-col gap-1'>
+              <ModalHeader className='flex flex-col gap-1 place-self-start'>
                 ¿Quién lo tiene que pedir?
               </ModalHeader>
               <ModalBody>
@@ -72,7 +72,7 @@ function RequestModal({ spinOptions }: Props) {
                   }}
                 />
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter className='flex gap-x-4 place-self-end'>
                 <Button
                   color='secondary'
                   variant='flat'
