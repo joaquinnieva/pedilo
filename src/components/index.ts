@@ -6,6 +6,6 @@ export { default as IconClose } from './iconClose/IconClose';
 export { default as IconEdit } from './iconEdit/IconEdit';
 export { default as MenuContainers } from './menuContainers/MenuContainers';
 export { default as RequestContainer } from './requestContainer/RequestContainer';
+export { default as RequestModal } from './requestModal/RequestModal';
 export { default as SendRequest } from './sendRequest/SendRequest';
 export { default as Separator } from './separator/Separator';
-
