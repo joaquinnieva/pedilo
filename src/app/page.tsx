@@ -17,7 +17,7 @@ export default function Home() {
     getData();
   }, []);
   return (
-    <main className="flex min-h-screen flex-col bg-neutral items-center p-4">
+    <main className="dark flex min-h-screen flex-col bg-neutral items-center p-4">
       <Separator>Menus</Separator>
       <MenuContainers state={[menus, setMenus]} />
       <Separator>Pedidos</Separator>
