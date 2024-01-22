@@ -11,18 +11,24 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   const getData = async () => {
+    setLoading(true);
     setMenus(await getMenus());
     setRequests(await getRequests());
     setLoading(false);
   };
 
   useEffect(() => {
+    window.addEventListener('focus', getData);
     getData();
+    return () => {
+      window.removeEventListener('focus', getData);
+    };
   }, []);
+
   if (loading)
     return (
       <div className="h-screen w-screen grid bg-neutral place-content-center">
-        <Spinner />
+        <Spinner /> Actualizando información
       </div>
     );
   return (
