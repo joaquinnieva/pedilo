@@ -20,7 +20,7 @@ function RequestContainer({ state, menus }: any) {
     );
   };
 
-  const deleteMenu = (id: string) => {
+  const deleteReq = (id: string) => {
     const menu = doc(db, 'requests', id);
     toast.promise(
       deleteDoc(menu).then(() => {
@@ -49,10 +49,10 @@ function RequestContainer({ state, menus }: any) {
   return (
     <div className="flex flex-wrap w-full">
       {requests.map((info: any, i: number) => (
-        <CardRequest key={i} info={info} menus={menus} onChangeReq={onChangeReq} deleteMenu={deleteMenu} />
+        <CardRequest key={i} info={info} menus={menus} onChangeReq={onChangeReq} deleteReq={deleteReq} />
       ))}
       <div className="p-4 w-1/4">
-        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-card p-8 justify-center items-center cursor-pointer">
+        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-card p-12 justify-center items-center cursor-pointer">
           <IconAdd /> Agregar pedido
         </div>
       </div>
