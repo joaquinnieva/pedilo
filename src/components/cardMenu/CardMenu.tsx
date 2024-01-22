@@ -4,11 +4,16 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { IconEdit } from '..';
+import { IconAdd, IconEdit } from '..';
 
-function CardMenu({ info, changeInfo, deleteMenu }: any) {
+function CardMenu({ info = null, changeInfo, deleteMenu, addMenu, isNew = false }: any) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [formInfo, setFormInfo] = useState(info);
+
+  const closeModal = () => {
+    onOpenChange();
+    setFormInfo(info);
+  };
 
   const acceptEdition = () => {
     toast.promise(updateDoc(doc(db, 'menu', info.id), formInfo), {
@@ -42,25 +47,35 @@ function CardMenu({ info, changeInfo, deleteMenu }: any) {
       { position: 'bottom-center' }
     );
   };
+
   const deleteReq = (id: string) => {
     deleteMenu(id);
     onOpenChange();
   };
 
+  const addNewMenu = async () => {
+    await addMenu(formInfo);
+    closeModal();
+  };
+
   return (
     <div className="p-4 w-1/4 text-white">
-      <Tooltip content={info?.menu}>
-        <div className="flex rounded-lg h-full bg-card p-3 flex-col relative">
-          <div className="flex flex-col gap-2 relative text-white">
+      <Tooltip content={info?.menu || 'Crear Menu'}>
+        {!isNew ? (
+          <div className="flex rounded-lg h-full bg-card p-4 gap-2 flex-col  relative">
             <div className="absolute right-3 cursor-pointer" onClick={onOpen}>
               <IconEdit />
             </div>
-            <div className="">${info?.price}</div>
-            <div className="">{info?.menu}</div>
+            <div>${info?.price}</div>
+            <div>{info?.menu}</div>
           </div>
-        </div>
+        ) : (
+          <div onClick={onOpen} className="flex rounded-lg gap-2 h-full bg-card py-7 justify-center items-center cursor-pointer">
+            <IconAdd /> Agregar menu
+          </div>
+        )}
       </Tooltip>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="bg-neutral" size="3xl">
+      <Modal isOpen={isOpen} onOpenChange={closeModal} className="bg-neutral" size="3xl">
         <ModalContent className="grid place-items-center">
           <>
             <ModalHeader className="flex flex-col gap-1 place-self-start">Editar menu</ModalHeader>
@@ -89,11 +104,11 @@ function CardMenu({ info, changeInfo, deleteMenu }: any) {
               </div>
             </ModalBody>
             <ModalFooter className="flex w-full justify-between">
-              <Button color="warning" variant="flat" onPress={onPressDelete}>
+              <Button className={isNew ? 'invisible' : ''} color="warning" variant="flat" onPress={onPressDelete}>
                 Eliminar
               </Button>
-              <Button color="primary" onPress={acceptEdition}>
-                Editar
+              <Button isDisabled={!formInfo?.price || !formInfo?.menu} color="primary" onPress={isNew ? addNewMenu : acceptEdition}>
+                {isNew ? 'Crear' : 'Editar'}
               </Button>
             </ModalFooter>
           </>

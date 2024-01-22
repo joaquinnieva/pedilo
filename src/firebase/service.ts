@@ -24,3 +24,14 @@ export const getRequests = () => {
     });
   });
 };
+
+export const getInfo = () => {
+  const info = collection(db, 'info');
+  const infoQuery = query(info);
+
+  return getDocs(infoQuery).then((resp) => {
+    return resp.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
+  });
+};

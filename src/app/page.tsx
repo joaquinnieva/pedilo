@@ -1,8 +1,9 @@
 'use client';
-import { MenuContainers, RequestContainer, SendRequest, Separator } from '@/components';
+import { MenuContainers, Navbar, RequestContainer, Separator } from '@/components';
 import { getMenus, getRequests } from '@/firebase/service';
+import { Spinner } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
-import { LoaderIcon, Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
   const [menus, setMenus] = useState<any>([]);
@@ -21,17 +22,19 @@ export default function Home() {
   if (loading)
     return (
       <div className="h-screen w-screen grid bg-neutral place-content-center">
-        <LoaderIcon />
+        <Spinner />
       </div>
     );
   return (
-    <main className="dark flex min-h-screen flex-col bg-neutral items-center p-4">
-      <Separator>Menus</Separator>
-      <MenuContainers state={[menus, setMenus]} />
-      <Separator>Pedidos</Separator>
-      <RequestContainer state={[requests, setRequests]} menus={menus} />
-      <SendRequest requests={requests} />
-      <Toaster position="top-right" />
-    </main>
+    <section>
+      <Navbar requests={requests} />
+      <main className="dark flex min-h-[calc(100vh-64px)] flex-col bg-neutral items-center p-4">
+        <Separator>Menus</Separator>
+        <MenuContainers state={[menus, setMenus]} />
+        <Separator>Pedidos</Separator>
+        <RequestContainer state={[requests, setRequests]} menus={menus} />
+        <Toaster position="bottom-right" />
+      </main>
+    </section>
   );
 }

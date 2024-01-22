@@ -1,5 +1,5 @@
 'use client';
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 const Wheel = dynamic(() => import('react-custom-roulette').then((mod) => mod.Wheel), {
@@ -32,9 +32,11 @@ function RequestModal({ spinOptions }: Props) {
   if (spinOptions?.length === 0) return null;
   return (
     <>
-      <Button color="warning" onPress={onOpen} disabled={spinOptions?.length === 0}>
-        ¿Quién lo tiene que pedir?
-      </Button>
+      <Tooltip content="Hay que sortearlo 🥚">
+        <Button color="warning" variant="flat" onPress={onOpen} disabled={spinOptions?.length === 0}>
+          ¿Quién lo tiene que pedir?
+        </Button>
+      </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="bg-card" size="3xl">
         <ModalContent className="grid place-items-center">
           {(onClose) => (

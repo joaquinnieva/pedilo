@@ -1,16 +1,16 @@
 import { db } from '@/firebase/config';
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
-import { CardRequest, IconAdd } from '..';
+import { CardRequest } from '..';
 
 function RequestContainer({ state, menus }: any) {
   const [requests, setRequests] = state;
 
-  const addMenu = () => {
-    const menu = collection(db, 'requests');
+  const addReq = (req: any) => {
+    const reqs = collection(db, 'requests');
     toast.promise(
-      addDoc(menu, { name: '', price: 0, type: 'Efectivo' }).then((doc) => {
-        setRequests((curr: any) => [...curr, { id: doc.id, name: '', price: 0, type: 'Efectivo' }]);
+      addDoc(reqs, req).then((doc) => {
+        setRequests((curr: any) => [...curr, { id: doc.id, ...req }]);
       }),
       {
         loading: 'Agregando...',
@@ -51,11 +51,7 @@ function RequestContainer({ state, menus }: any) {
       {requests.map((info: any, i: number) => (
         <CardRequest key={i} info={info} menus={menus} onChangeReq={onChangeReq} deleteReq={deleteReq} />
       ))}
-      <div className="p-4 w-1/4">
-        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-card p-12 justify-center items-center cursor-pointer">
-          <IconAdd /> Agregar pedido
-        </div>
-      </div>
+      <CardRequest isNew addReq={addReq} menus={menus} />
     </div>
   );
 }

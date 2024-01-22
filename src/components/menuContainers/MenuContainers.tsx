@@ -1,16 +1,16 @@
 import { db } from '@/firebase/config';
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
-import { CardMenu, IconAdd } from '..';
+import { CardMenu } from '..';
 
 function MenuContainers({ state }: any) {
   const [menus, setMenus] = state;
 
-  const addMenu = () => {
-    const menu = collection(db, 'menu');
+  const addMenu = (newMenu: any) => {
+    const menus = collection(db, 'menu');
     toast.promise(
-      addDoc(menu, { menu: '', price: 0 }).then((doc) => {
-        setMenus((curr: any) => [...curr, { id: doc.id, menu: '', price: 0 }]);
+      addDoc(menus, newMenu).then((doc) => {
+        setMenus((curr: any) => [...curr, { id: doc.id, ...newMenu }]);
       }),
       {
         loading: 'Agregando...',
@@ -46,16 +46,13 @@ function MenuContainers({ state }: any) {
     }
     setMenus(newRequests);
   };
+
   return (
     <div className="flex flex-wrap w-full">
       {menus.map((info: any, i: number) => (
         <CardMenu key={i} info={info} changeInfo={changeInfo} deleteMenu={deleteMenu} />
       ))}
-      <div className="p-4 w-1/4">
-        <div onClick={addMenu} className="flex rounded-lg gap-2 h-full bg-card p-6 justify-center items-center cursor-pointer">
-          <IconAdd /> Agregar menu
-        </div>
-      </div>
+      <CardMenu isNew addMenu={addMenu} />
     </div>
   );
 }
