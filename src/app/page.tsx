@@ -18,11 +18,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    window.addEventListener('focus', getData);
     getData();
-    return () => {
-      window.removeEventListener('focus', getData);
-    };
   }, []);
 
   if (loading)
@@ -33,7 +29,7 @@ export default function Home() {
     );
   return (
     <section>
-      <Navbar requests={requests} />
+      <Navbar requests={requests} getData={getData} />
       <main className="dark flex min-h-[calc(100vh-64px)] flex-col bg-neutral items-center p-4">
         <Separator>Menus</Separator>
         <MenuContainers state={[menus, setMenus]} />

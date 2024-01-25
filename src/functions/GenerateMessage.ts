@@ -1,7 +1,7 @@
 import { MessageGenerations } from '@/consts/MessageGenerations';
 import { PayMethods } from '@/consts/PayMethods';
 
-export const FormatCartToText = (data: any[], action: MessageGenerations): string => {
+export const FormatCartToText = ({ data = [], action, sendPrice }: { data: any[]; action: MessageGenerations; sendPrice?: number }): string => {
   const cart = data.sort((a: any, b: any) => {
     if (a.type < b.type) {
       return -1;
@@ -12,7 +12,7 @@ export const FormatCartToText = (data: any[], action: MessageGenerations): strin
     return 0;
   });
 
-  const total = cart.reduce((accumulator: number, product: any): number => accumulator + Number(product.price), 200);
+  const total = cart.reduce((accumulator: number, product: any): number => accumulator + Number(product.price), sendPrice);
   const cash = cart.reduce(
     (accumulator: number, product: any): number => (product.type === PayMethods.EFECTIVO ? accumulator + Number(product.price) : accumulator + 0),
     0
@@ -31,7 +31,7 @@ export const FormatCartToText = (data: any[], action: MessageGenerations): strin
   const textWithTotals = text
     .concat(`\n| *${PayMethods.TRANSFERENCIA}* = $${transfer} |`)
     .concat(`\n| *${PayMethods.EFECTIVO}* = $${cash} |`)
-    .concat(`\n| *Envío* = $200 |`)
+    .concat(`\n| *Envío* = ${sendPrice} |`)
     .concat(`\n| *Total* = $${total} |`);
 
   const ToSend = {

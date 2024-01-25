@@ -18,6 +18,8 @@ function RequestContainer({ state, menus }: any) {
         error: <b>No se pudo agregar.</b>,
       }
     );
+    const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
+    localStorage.setItem('prevReqs', JSON.stringify({ value: [...prevReqs.value, req.name] }));
   };
 
   const deleteReq = (id: string) => {

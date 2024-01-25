@@ -1,6 +1,6 @@
 import { db } from '@/firebase/config';
 import { getInfo } from '@/firebase/service';
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, Tooltip, useDisclosure } from '@nextui-org/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -9,6 +9,7 @@ function MenuMessage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
   const [message, setMessage] = useState('');
+  const [sendPrice, setSendPrice] = useState('0');
 
   const closeModal = () => {
     onOpenChange();
@@ -18,12 +19,13 @@ function MenuMessage() {
   const openModal = async () => {
     const [data]: any = await getInfo();
     setMessage(data.message);
+    setSendPrice(data?.sendPrice || 0);
     onOpen();
   };
   const acceptEdition = () => {
     if (isEdit) {
       onOpenChange();
-      toast.promise(updateDoc(doc(db, 'info', 'info'), { message }), {
+      toast.promise(updateDoc(doc(db, 'info', 'info'), { message, sendPrice }), {
         loading: 'Editando...',
         success: <b>Editando correctamente!</b>,
         error: <b>No se pudo editar.</b>,
@@ -55,6 +57,19 @@ function MenuMessage() {
               disableAutosize
               onChange={(e) => setMessage(e.target.value)}
               style={{ background: 'transparent', height: '500px!important' }}
+            />
+
+            <Input
+              isReadOnly={!isEdit}
+              style={{ background: 'transparent' }}
+              variant="bordered"
+              size="sm"
+              startContent={'$'}
+              type="number"
+              value={sendPrice}
+              label="Configurar Envìo"
+              onChange={(e) => setSendPrice(e.target.value)}
+              className={`w-full`}
             />
           </ModalBody>
           <ModalFooter className="flex w-full justify-end">

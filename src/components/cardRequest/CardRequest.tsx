@@ -10,6 +10,11 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [formInfo, setFormInfo] = useState(info);
 
+  const isOwnReq = () => {
+    const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
+    return prevReqs?.value.includes(info?.name);
+  };
+
   const closeModal = () => {
     setFormInfo(info);
     onOpenChange();
@@ -59,6 +64,8 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
   const deleteRequest = async (id: string) => {
     await deleteReq(id);
     onOpenChange();
+    const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
+    localStorage.setItem('prevReqs', JSON.stringify({ value: prevReqs.value.filter((value: string) => value !== info.name) }));
   };
   const addNewReq = async () => {
     await addReq(formInfo);
@@ -69,9 +76,11 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
       <Tooltip content={info?.name || 'Crear pedido'}>
         {!isNew ? (
           <div className="flex rounded-lg h-full bg-card p-4 gap-2 flex-col relative">
-            <div className="absolute right-4 z-10 cursor-pointer" onClick={onOpen}>
-              <IconEdit />
-            </div>
+            {isOwnReq() && (
+              <div className="absolute right-4 z-10 cursor-pointer" onClick={onOpen}>
+                <IconEdit />
+              </div>
+            )}
             <div>{info?.name}</div>
             <div>{info?.type}</div>
             <div>{info?.menu}</div>

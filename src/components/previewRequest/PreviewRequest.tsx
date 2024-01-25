@@ -1,4 +1,5 @@
 import { MessageGenerations } from '@/consts/MessageGenerations';
+import { getInfo } from '@/firebase/service';
 import { FormatCartToText } from '@/functions/GenerateMessage';
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react';
 import { useState } from 'react';
@@ -7,19 +8,22 @@ import toast from 'react-hot-toast';
 function PreviewRequest({ requests }: { requests: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [text, setText] = useState('');
+  const [price, setPrice] = useState(200);
 
-  const previewText = () => {
-    setText(FormatCartToText(requests, MessageGenerations.PREVIEW));
+  const previewText = async () => {
+    const [data]: any = await getInfo();
+    setPrice(data?.sendPrice);
+    setText(FormatCartToText({ data: requests, action: MessageGenerations.PREVIEW, sendPrice: Number(data?.sendPrice) }));
     onOpen();
   };
 
   const copyText = () => {
-    navigator.clipboard.writeText(FormatCartToText(requests, MessageGenerations.COPY));
+    navigator.clipboard.writeText(FormatCartToText({ data: requests, action: MessageGenerations.COPY, sendPrice: Number(price) }));
     toast.success('Copiado al portapapeles');
   };
 
   const generateSent = () => {
-    window.open(`https://wa.me/+543517513954?text=${FormatCartToText(requests, MessageGenerations.WP)}`);
+    window.open(`https://wa.me/+543517513954?text=${FormatCartToText({ data: requests, action: MessageGenerations.WP, sendPrice: Number(price) })}`);
   };
 
   return (
