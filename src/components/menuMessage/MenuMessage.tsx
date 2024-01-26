@@ -1,5 +1,6 @@
 import { db } from '@/firebase/config';
 import { getInfo } from '@/firebase/service';
+import { getDateString } from '@/functions/DateUtils';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, Tooltip, useDisclosure } from '@nextui-org/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
@@ -10,6 +11,7 @@ function MenuMessage() {
   const [isEdit, setIsEdit] = useState(false);
   const [message, setMessage] = useState('');
   const [sendPrice, setSendPrice] = useState('0');
+  const [date, setDate] = useState('');
 
   const closeModal = () => {
     onOpenChange();
@@ -18,16 +20,21 @@ function MenuMessage() {
 
   const openModal = async () => {
     const [data]: any = await getInfo();
-    setMessage(data.message);
+    setMessage(data?.message);
+    setDate(data?.date ? getDateString(new Date(data?.date)) : '');
     setSendPrice(data?.sendPrice || 0);
     onOpen();
   };
   const acceptEdition = () => {
+    const newDate = new Date().toISOString();
     if (isEdit) {
       onOpenChange();
-      toast.promise(updateDoc(doc(db, 'info', 'info'), { message, sendPrice }), {
+      toast.promise(updateDoc(doc(db, 'info', 'info'), { message, sendPrice, date: newDate }), {
         loading: 'Editando...',
-        success: <b>Editando correctamente!</b>,
+        success: () => {
+          setDate(newDate);
+          return <b>Editando correctamente!</b>;
+        },
         error: <b>No se pudo editar.</b>,
       });
     } else {
@@ -58,7 +65,6 @@ function MenuMessage() {
               onChange={(e) => setMessage(e.target.value)}
               style={{ background: 'transparent', height: '500px!important' }}
             />
-
             <Input
               isReadOnly={!isEdit}
               style={{ background: 'transparent' }}
@@ -71,6 +77,7 @@ function MenuMessage() {
               onChange={(e) => setSendPrice(e.target.value)}
               className={`w-full`}
             />
+            Última edición: {date}
           </ModalBody>
           <ModalFooter className="flex w-full justify-end">
             <Button color="primary" onPress={acceptEdition}>

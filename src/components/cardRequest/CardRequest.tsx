@@ -36,6 +36,8 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
       loading: 'Editando...',
       success: () => {
         onChangeReq(formInfo);
+        const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
+        localStorage.setItem('prevReqs', JSON.stringify({ value: [...prevReqs.value.filter(), formInfo.name] }));
         return <b>Editando correctamente!</b>;
       },
       error: <b>No se pudo editar.</b>,
