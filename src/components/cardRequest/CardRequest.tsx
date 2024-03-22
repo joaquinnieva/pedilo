@@ -11,6 +11,8 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
   const [formInfo, setFormInfo] = useState(info);
 
   const isOwnReq = () => {
+    if (localStorage?.getItem?.('admin')) return true;
+
     const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
     return prevReqs?.value.includes(info?.name);
   };
