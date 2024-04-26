@@ -29,7 +29,7 @@ function PreviewRequest({ requests }: { requests: any }) {
   return (
     <>
       <Tooltip content="Solicitalo o copialo 🙏🏽">
-        <Button color="success" onClick={previewText}>
+        <Button color="primary" onClick={previewText}>
           PEDILO
         </Button>
       </Tooltip>

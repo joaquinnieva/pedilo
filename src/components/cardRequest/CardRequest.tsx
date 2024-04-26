@@ -1,5 +1,6 @@
 import { PayMethods } from '@/consts/PayMethods';
 import { db } from '@/firebase/config';
+import { getDateString } from '@/functions/DateUtils';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
@@ -34,7 +35,9 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
 
   const acceptEdition = () => {
     onOpenChange();
-    toast.promise(updateDoc(doc(db, 'requests', info.id), formInfo), {
+
+    const promm = async () => await updateDoc(doc(db, 'requests', info.id), formInfo);
+    toast.promise(promm(), {
       loading: 'Editando...',
       success: () => {
         onChangeReq(formInfo);
@@ -72,25 +75,32 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
     localStorage.setItem('prevReqs', JSON.stringify({ value: prevReqs.value.filter((value: string) => value !== info.name) }));
   };
   const addNewReq = async () => {
-    await addReq(formInfo);
+    await addReq({ ...formInfo, date: getDateString(new Date()) });
     closeModal();
   };
   return (
     <div className="p-4 w-1/4">
       <Tooltip content={info?.name || 'Crear pedido'}>
         {!isNew ? (
-          <div className="flex rounded-lg h-full bg-card p-4 gap-2 flex-col relative">
+          <div
+            onClick={() => isOwnReq() && onOpen()}
+            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg h-full border-primary-800 bg-card border p-4 gap-1 flex-col relative">
             {isOwnReq() && (
-              <div className="absolute right-4 z-10 cursor-pointer" onClick={onOpen}>
+              <div className="absolute right-4 z-10 cursor-pointer">
                 <IconEdit />
               </div>
             )}
-            <div>{info?.name}</div>
-            <div>{info?.type}</div>
-            <div>{info?.menu}</div>
+            <div className="text-primary-300">{info?.name}</div>
+            <div className="text-gray">{info?.menu}</div>
+            <div className="text-gray flex justify-between w-full">
+              <p>{info?.type} </p>
+              <p className="text-xs flex items-end">{info?.date}</p>
+            </div>
           </div>
         ) : (
-          <div onClick={onOpen} className="flex rounded-lg gap-2 h-full bg-card py-12 justify-center items-center cursor-pointer">
+          <div
+            onClick={onOpen}
+            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg gap-2 h-full border-primary-800 bg-card border py-11 justify-center items-center">
             <IconAdd /> Agregar pedido
           </div>
         )}

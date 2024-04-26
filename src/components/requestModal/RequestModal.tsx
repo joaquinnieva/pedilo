@@ -55,14 +55,6 @@ function RequestModal({ spinOptions }: Props) {
                 />
               </ModalBody>
               <ModalFooter className="flex gap-x-4 place-self-end">
-                <Button
-                  color="secondary"
-                  variant="flat"
-                  onPress={() => {
-                    onClose();
-                  }}>
-                  Cerrar
-                </Button>
                 <Button color="primary" onPress={handleSpinClick}>
                   Girar
                 </Button>

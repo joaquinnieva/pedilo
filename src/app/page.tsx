@@ -1,5 +1,5 @@
 'use client';
-import { MenuContainers, Navbar, RequestContainer, Separator } from '@/components';
+import { MenuContainers, Navbar, RequestContainer } from '@/components';
 import { getMenus, getRequests } from '@/firebase/service';
 import { Spinner } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
@@ -10,33 +10,33 @@ export default function Home() {
   const [requests, setRequests] = useState<any>([]);
   const [loading, setLoading] = useState(true);
 
-  const getData = async () => {
-    setLoading(true);
-    setMenus(await getMenus());
-    setRequests(await getRequests());
+  const getData = async (load = false) => {
+    load && setLoading(true);
+    const data = { menus: await getMenus(), reqs: await getRequests() };
+    setMenus(data.menus);
+    setRequests(data.reqs);
     setLoading(false);
   };
 
   useEffect(() => {
-    getData();
+    getData(true);
   }, []);
 
-  if (loading)
-    return (
-      <div className="h-screen w-screen grid bg-neutral place-content-center">
-        <Spinner /> Actualizando información
-      </div>
-    );
   return (
-    <section>
+    <section className="dark bg-neutral w-full">
       <Navbar requests={requests} getData={getData} />
-      <main className="dark flex min-h-[calc(100vh-64px)] flex-col bg-neutral items-center p-4">
-        <Separator>Menus</Separator>
+      <main className="dark flex min-h-[calc(100vh-64px)] flex-col w-full items-center px-4">
         <MenuContainers state={[menus, setMenus]} />
-        <Separator>Pedidos</Separator>
-        <RequestContainer state={[requests, setRequests]} menus={menus} />
+        <RequestContainer state={[requests, setRequests]} menus={menus} getData={getData} />
+
         <Toaster position="bottom-right" />
       </main>
+
+      {loading && (
+        <div className="h-screen w-screen grid fixed z-10 top-0 left-0 bg-neutral/50 place-content-center">
+          <Spinner /> Actualizando información
+        </div>
+      )}
     </section>
   );
 }
