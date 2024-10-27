@@ -13,6 +13,7 @@
     "@nextui-org/react": "2.2.9",
     "firebase": "10.7.1",
     "framer-motion": "10.18.0",
+    "lucide-react": "^0.453.0",
     "next": "14.0.4",
     "react": "18",
     "react-custom-roulette": "^1.4.1",

@@ -1,7 +1,7 @@
 import { PayMethods } from '@/consts/PayMethods';
 import { db } from '@/firebase/config';
-import { getDateString } from '@/functions/DateUtils';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
+import { getDateString, isToday } from '@/functions/DateUtils';
+import { Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -84,7 +84,7 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
         {!isNew ? (
           <div
             onClick={() => isOwnReq() && onOpen()}
-            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg h-full border-primary-800 bg-card border p-4 gap-1 flex-col relative">
+            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg h-full bg-card p-4 gap-1 flex-col relative">
             {isOwnReq() && (
               <div className="absolute right-4 z-10 cursor-pointer">
                 <IconEdit />
@@ -94,17 +94,23 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
             <div className="text-gray">{info?.menu}</div>
             <div className="text-gray flex justify-between w-full">
               <p>{info?.type} </p>
-              <p className="text-xs flex items-end">{info?.date}</p>
+              <div className="text-xs flex items-center gap-2">
+                {isToday(info?.date) && (
+                  <Chip size="sm" color="warning" variant="flat">
+                    HOY
+                  </Chip>
+                )}
+                {info?.date}
+              </div>
             </div>
           </div>
         ) : (
-          <div
-            onClick={onOpen}
-            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg gap-2 h-full border-primary-800 bg-card border py-11 justify-center items-center">
+          <div onClick={onOpen} className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg gap-2 h-full bg-card py-11 justify-center items-center">
             <IconAdd /> Agregar pedido
           </div>
         )}
       </Tooltip>
+
       <Modal isOpen={isOpen} onOpenChange={closeModal} className="bg-neutral" size="3xl">
         <ModalContent className="grid place-items-center">
           <>

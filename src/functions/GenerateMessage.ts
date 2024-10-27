@@ -29,15 +29,15 @@ export const FormatCartToText = ({ data = [], action, sendPrice }: { data: any[]
   if (!text) return 'Hola quisiera hacerte una consulta';
 
   const textWithTotals = text
-    .concat(`\n| *${PayMethods.TRANSFERENCIA}* = $${transfer} |`)
-    .concat(`\n| *${PayMethods.EFECTIVO}* = $${cash} |`)
-    .concat(`\n| *Envío* = ${sendPrice} |`)
+    .concat(transfer === 0 ? '' : `\n| *${PayMethods.TRANSFERENCIA}* = $${transfer} |`)
+    .concat(cash === 0 ? '' : `\n| *${PayMethods.EFECTIVO}* = $${cash} |`)
+    .concat(sendPrice === 0 ? '' : `\n| *Envío* = ${sendPrice} |`)
     .concat(`\n| *Total* = $${total} |`);
 
   const ToSend = {
     [MessageGenerations.COPY]: textWithTotals,
     [MessageGenerations.WP]: textWithTotals?.replace(/\n/g, '%0A'),
-    [MessageGenerations.PREVIEW]: textWithTotals?.replace(/\n/g, '<br/>'),
+    [MessageGenerations.PREVIEW]: textWithTotals,
   };
   return ToSend[action];
 };

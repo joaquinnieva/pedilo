@@ -95,7 +95,7 @@ function RequestContainer({ state, menus, getData }: any) {
         <div className="flex w-full justify-between items-center">
           Pedidos
           <Button className={''} color="danger" variant="flat" onPress={onPressDelete}>
-            Reset
+            Resetear
           </Button>
         </div>
       </Separator>

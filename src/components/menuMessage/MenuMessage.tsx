@@ -3,6 +3,7 @@ import { getInfo } from '@/firebase/service';
 import { getDateString } from '@/functions/DateUtils';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, Tooltip, useDisclosure } from '@nextui-org/react';
 import { doc, updateDoc } from 'firebase/firestore';
+import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -11,6 +12,7 @@ function MenuMessage() {
   const [isEdit, setIsEdit] = useState(false);
   const [message, setMessage] = useState('');
   const [sendPrice, setSendPrice] = useState('0');
+  const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
 
   const closeModal = () => {
@@ -23,13 +25,14 @@ function MenuMessage() {
     setMessage(data?.message);
     setDate(data?.date ? getDateString(new Date(data?.date)) : '');
     setSendPrice(data?.sendPrice || 0);
+    setPhone(data?.phone || '+543517513954');
     onOpen();
   };
   const acceptEdition = () => {
     const newDate = new Date().toISOString();
     if (isEdit) {
       onOpenChange();
-      toast.promise(updateDoc(doc(db, 'info', 'info'), { message, sendPrice, date: newDate }), {
+      toast.promise(updateDoc(doc(db, 'info', 'info'), { message, sendPrice, phone, date: newDate }), {
         loading: 'Editando...',
         success: () => {
           setDate(newDate);
@@ -37,21 +40,20 @@ function MenuMessage() {
         },
         error: <b>No se pudo editar.</b>,
       });
-    } else {
-      setIsEdit(!isEdit);
     }
+    setIsEdit(!isEdit);
   };
 
   return (
     <>
-      <Tooltip content="Ver mensaje de Carlitos 📲">
-        <Button color="secondary" onPress={openModal} variant="bordered">
-          Ver mensaje
+      <Tooltip content="Configuración y datos 📲">
+        <Button color="secondary" onPress={openModal} variant="bordered" className="px-2 min-w-6">
+          <Settings />
         </Button>
       </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={closeModal} className="bg-neutral" size="3xl">
         <ModalContent className="grid place-items-center">
-          <ModalHeader className="flex flex-col gap-1 place-self-start">Previsualizar mensaje</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 place-self-start">Configuración</ModalHeader>
           <ModalBody className="w-10/12 h-full">
             <Textarea
               isReadOnly={!isEdit}
@@ -73,8 +75,19 @@ function MenuMessage() {
               startContent={'$'}
               type="number"
               value={sendPrice}
-              label="Configurar Envìo"
+              label="Precio de envío"
               onChange={(e) => setSendPrice(e.target.value)}
+              className={`w-full`}
+            />
+            <Input
+              isReadOnly={!isEdit}
+              style={{ background: 'transparent' }}
+              variant="bordered"
+              size="sm"
+              type="text"
+              value={phone}
+              label="Celular"
+              onChange={(e) => setPhone(e.target.value)}
               className={`w-full`}
             />
             Última edición: {date}
