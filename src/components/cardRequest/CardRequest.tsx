@@ -84,7 +84,7 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
         {!isNew ? (
           <div
             onClick={() => isOwnReq() && onOpen()}
-            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg h-full bg-card p-4 gap-1 flex-col relative">
+            className="cursor-pointer  flex shadow-lg rounded-lg h-full bg-card p-4 gap-1 flex-col relative border border-gray/20">
             {isOwnReq() && (
               <div className="absolute right-4 z-10 cursor-pointer">
                 <IconEdit />
@@ -105,7 +105,7 @@ function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew
             </div>
           </div>
         ) : (
-          <div onClick={onOpen} className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg gap-2 h-full bg-card py-11 justify-center items-center">
+          <div onClick={onOpen} className="cursor-pointer  flex shadow-lg rounded-lg gap-2 h-full bg-card py-11 justify-center items-center border border-gray/20">
             <IconAdd /> Agregar pedido
           </div>
         )}

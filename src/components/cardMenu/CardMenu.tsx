@@ -62,7 +62,7 @@ function CardMenu({ info = null, changeInfo, deleteMenu, addMenu, isNew = false 
     <div className="p-4 w-1/4 text-white">
       <Tooltip content={info?.menu || 'Crear Menu'}>
         {!isNew ? (
-          <div onClick={onOpen} className="cursor-pointer flex shadow-lg hover:animate-pulse rounded-lg h-full p-4 pr-8 gap-2 flex-row relative bg-card">
+          <div onClick={onOpen} className="cursor-pointer flex shadow-lg rounded-lg h-full p-4 pr-8 gap-2 flex-row relative bg-card border border-gray/20">
             <div className="absolute right-3 cursor-pointer">
               <IconEdit />
             </div>
@@ -70,7 +70,7 @@ function CardMenu({ info = null, changeInfo, deleteMenu, addMenu, isNew = false 
             <div className="text-gray truncate">{info?.menu.charAt(0).toUpperCase() + info?.menu.slice(1)}</div>
           </div>
         ) : (
-          <div onClick={onOpen} className="flex shadow-lg hover:animate-pulse rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card">
+          <div onClick={onOpen} className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card border border-gray/20">
             <IconAdd /> Agregar menu
           </div>
         )}
