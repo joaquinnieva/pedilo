@@ -10,10 +10,13 @@ import { toast } from 'sonner';
 import { Modal, Popover, Select } from '..';
 
 function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: any) {
-	const [isOpen, setOpen] = useState(false);
-	const onOpen = () => setOpen(true);
-	const onOpenChange = () => setOpen(!isOpen);
 	const [formInfo, setFormInfo] = useState(info);
+	const [isOpen, setOpen] = useState(false);
+	const onOpenChange = () => setOpen(!isOpen);
+	const onOpen = () => {
+		setFormInfo(info);
+		setOpen(true);
+	};
 
 	const isOwnReq = () => {
 		if (localStorage?.getItem?.('admin')) return true;

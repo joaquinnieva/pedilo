@@ -9,10 +9,12 @@ import { Modal, Popover } from '..';
 
 function CardMenu({ info = null, deleteMenu, addMenu, isNew = false }: any) {
 	const [formInfo, setFormInfo] = useState(info);
-
 	const [isOpen, setOpen] = useState(false);
-	const onOpen = () => setOpen(true);
 	const onOpenChange = () => setOpen(!isOpen);
+	const onOpen = () => {
+		setFormInfo(info);
+		setOpen(true);
+	};
 
 	const closeModal = () => {
 		onOpenChange();
