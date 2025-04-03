@@ -1,169 +1,188 @@
 import { PayMethods } from '@/consts/PayMethods';
 import { db } from '@/firebase/config';
 import { getDateString, isToday } from '@/functions/DateUtils';
-import { Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Badge, Button, TextField, Tooltip } from '@radix-ui/themes';
+import { Popover as RPopover } from '@radix-ui/themes';
 import { doc, updateDoc } from 'firebase/firestore';
+import { Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { IconAdd, IconEdit } from '..';
+import { toast } from 'sonner';
+import { Modal, Popover, Select } from '..';
 
-function CardRequest({ info = null, menus, onChangeReq, deleteReq, addReq, isNew = false }: any) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [formInfo, setFormInfo] = useState(info);
+function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: any) {
+	const [isOpen, setOpen] = useState(false);
+	const onOpen = () => setOpen(true);
+	const onOpenChange = () => setOpen(!isOpen);
+	const [formInfo, setFormInfo] = useState(info);
 
-  const isOwnReq = () => {
-    if (localStorage?.getItem?.('admin')) return true;
+	const isOwnReq = () => {
+		if (localStorage?.getItem?.('admin')) return true;
 
-    const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
-    return prevReqs?.value.includes(info?.name);
-  };
+		const prevReqs = localStorage?.getItem?.('prevReqs')
+			? JSON.parse(localStorage?.getItem?.('prevReqs') || '')
+			: { value: [] };
+		return prevReqs?.value.includes(info?.name);
+	};
 
-  const closeModal = () => {
-    setFormInfo(info);
-    onOpenChange();
-  };
+	const closeModal = () => {
+		setFormInfo(info);
+		onOpenChange();
+	};
 
-  const selectMenu = ({ currentKey }: any) => {
-    const menu = currentKey;
-    if (menu === 'Selecciona') {
-      setFormInfo({ ...formInfo, menu: 'Selecciona', price: 0 });
-    } else {
-      const menuselected = menus.find((menuItem: any) => menuItem.menu === menu);
-      setFormInfo({ ...formInfo, menu, price: menuselected.price });
-    }
-  };
+	const selectMenu = (menu: string) => {
+		const menuSelected = menus.find((menuItem: any) => menuItem.menu === menu);
+		setFormInfo({ ...formInfo, ...menuSelected });
+	};
 
-  const acceptEdition = () => {
-    onOpenChange();
+	const acceptEdition = () => {
+		onOpenChange();
 
-    const promm = async () => await updateDoc(doc(db, 'requests', info.id), formInfo);
-    toast.promise(promm(), {
-      loading: 'Editando...',
-      success: () => {
-        onChangeReq(formInfo);
-        const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
-        localStorage.setItem('prevReqs', JSON.stringify({ value: [...prevReqs.value.filter(), formInfo.name] }));
-        return <b>Editando correctamente!</b>;
-      },
-      error: <b>No se pudo editar.</b>,
-    });
-  };
-  const onPressDelete = () => {
-    toast.remove();
-    toast(
-      (t) => (
-        <span className="flex items-center flex-col">
-          ¿Estás seguro de borrar este pedido?
-          <Button
-            color="danger"
-            variant="solid"
-            onPress={() => {
-              deleteRequest(info.id);
-              toast.dismiss(t.id);
-            }}>
-            Confirmar
-          </Button>
-        </span>
-      ),
-      { position: 'bottom-center' }
-    );
-  };
-  const deleteRequest = async (id: string) => {
-    await deleteReq(id);
-    onOpenChange();
-    const prevReqs = localStorage?.getItem?.('prevReqs') ? JSON.parse(localStorage?.getItem?.('prevReqs') || '') : { value: [] };
-    localStorage.setItem('prevReqs', JSON.stringify({ value: prevReqs.value.filter((value: string) => value !== info.name) }));
-  };
-  const addNewReq = async () => {
-    await addReq({ ...formInfo, date: getDateString(new Date()) });
-    closeModal();
-  };
-  return (
-    <div className="p-4 w-1/4">
-      <Tooltip content={info?.name || 'Crear pedido'}>
-        {!isNew ? (
-          <div
-            onClick={() => isOwnReq() && onOpen()}
-            className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg h-full bg-card p-4 gap-1 flex-col relative">
-            {isOwnReq() && (
-              <div className="absolute right-4 z-10 cursor-pointer">
-                <IconEdit />
-              </div>
-            )}
-            <div className="text-primary-300">{info?.name}</div>
-            <div className="text-gray">{info?.menu}</div>
-            <div className="text-gray flex justify-between w-full">
-              <p>{info?.type} </p>
-              <div className="text-xs flex items-center gap-2">
-                {isToday(info?.date) && (
-                  <Chip size="sm" color="warning" variant="flat">
-                    HOY
-                  </Chip>
-                )}
-                {info?.date}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div onClick={onOpen} className="cursor-pointer hover:animate-pulse flex shadow-lg rounded-lg gap-2 h-full bg-card py-11 justify-center items-center">
-            <IconAdd /> Agregar pedido
-          </div>
-        )}
-      </Tooltip>
+		const promm = async () => await updateDoc(doc(db, 'requests', info.id), formInfo);
+		toast.promise(promm(), {
+			loading: 'Editando...',
+			success: () => {
+				const prevReqs = localStorage?.getItem?.('prevReqs')
+					? JSON.parse(localStorage?.getItem?.('prevReqs') || '')
+					: { value: [] };
+				localStorage.setItem(
+					'prevReqs',
+					JSON.stringify({ value: [...prevReqs.value.filter(), formInfo.name] }),
+				);
+				return 'Editando correctamente!';
+			},
+			error: 'No se pudo editar.',
+		});
+	};
 
-      <Modal isOpen={isOpen} onOpenChange={closeModal} className="bg-neutral" size="3xl">
-        <ModalContent className="grid place-items-center">
-          <>
-            <ModalHeader className="flex flex-col gap-1 place-self-start">Editar pedido</ModalHeader>
-            <ModalBody className="w-2/3">
-              <div className="flex flex-col gap-2">
-                <Input
-                  style={{ background: 'transparent' }}
-                  variant="bordered"
-                  size="sm"
-                  value={formInfo?.name}
-                  label="Nombre"
-                  onChange={(e) => setFormInfo({ ...formInfo, name: e.target.value })}
-                  className={`w-full`}
-                />
+	const deleteRequest = async (req: any) => {
+		await deleteReq(req);
+		onOpenChange();
+		const prevReqs = localStorage?.getItem?.('prevReqs')
+			? JSON.parse(localStorage?.getItem?.('prevReqs') || '')
+			: { value: [] };
+		localStorage.setItem(
+			'prevReqs',
+			JSON.stringify({ value: prevReqs.value.filter((value: string) => value !== info.name) }),
+		);
+	};
 
-                <Select
-                  size="sm"
-                  label="Tipo de pago"
-                  className="w-full"
-                  variant="bordered"
-                  defaultSelectedKeys={[formInfo?.type]}
-                  onSelectionChange={(type: any) => setFormInfo({ ...formInfo, type: type?.currentKey })}>
-                  <SelectItem key={PayMethods.EFECTIVO} value={PayMethods.EFECTIVO}>
-                    {PayMethods.EFECTIVO}
-                  </SelectItem>
-                  <SelectItem key={PayMethods.TRANSFERENCIA} value={PayMethods.TRANSFERENCIA}>
-                    {PayMethods.TRANSFERENCIA}
-                  </SelectItem>
-                </Select>
+	const addNewReq = async () => {
+		await addReq({ ...formInfo, date: getDateString(new Date()) });
+		closeModal();
+	};
+	return (
+		<div className="p-4 w-1/4">
+			<Tooltip content={info?.name} hidden={!info?.menu}>
+				{!isNew ? (
+					<div
+						onClick={() => isOwnReq() && onOpen()}
+						className="cursor-pointer flex shadow-lg rounded-lg h-full bg-card/50 hover:bg-card/100 border-gray-500/50 border p-3 gap-1 flex-col relative text-sm backdrop-blur-xs"
+					>
+						{isOwnReq() && (
+							<div className="absolute right-3 p-1 z-10 cursor-pointer">
+								<Pencil className="w-4 h-4" />
+							</div>
+						)}
+						<div className="text-primary-300 font-semibold text-base">{info?.name}</div>
+						<div className="text-gray flex-1">
+							{info?.menu}
+							{info?.description ? `, ${info?.description}` : ''}
+						</div>
+						<div className="text-gray flex justify-between w-full">
+							<Badge color={info?.type === PayMethods.EFECTIVO ? 'green' : 'blue'}>{info?.type} </Badge>
+							<div className="text-xs flex items-center gap-2">
+								{isToday(info?.date) && <Badge color="amber">HOY</Badge>}
+								{info?.date}
+							</div>
+						</div>
+					</div>
+				) : (
+					<div
+						onClick={onOpen}
+						className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card/50 hover:bg-card/100 border-gray-500/50 border group backdrop-blur-xs"
+					>
+						<Plus />
+						<p className="w-0 h-6 group-hover:w-auto interpolate-size transition-all overflow-hidden ">
+							Agregar pedido
+						</p>
+					</div>
+				)}
+			</Tooltip>
 
-                <Select size={'sm'} label="Menú" className="w-full" variant="bordered" defaultSelectedKeys={[formInfo?.menu]} onSelectionChange={selectMenu}>
-                  {menus.map((menu: any) => (
-                    <SelectItem key={menu.menu} value={menu.menu}>
-                      {menu.menu}
-                    </SelectItem>
-                  ))}
-                </Select>
-              </div>
-            </ModalBody>
-            <ModalFooter className="flex w-full justify-between">
-              <Button className={isNew ? 'invisible' : ''} color="warning" variant="flat" onPress={onPressDelete}>
-                Eliminar
-              </Button>
-              <Button isDisabled={!formInfo?.name || !formInfo?.type || !formInfo?.menu} color="primary" onPress={isNew ? addNewReq : acceptEdition}>
-                {isNew ? 'Crear' : 'Editar'}
-              </Button>
-            </ModalFooter>
-          </>
-        </ModalContent>
-      </Modal>
-    </div>
-  );
+			<Modal open={isOpen} onOpenChange={closeModal} title={isNew ? 'Crear pedido' : 'Editar pedido'}>
+				<div className="flex flex-col gap-3">
+					<label>
+						Nombre
+						<TextField.Root
+							radius="large"
+							className={`w-full`}
+							value={formInfo?.name}
+							onChange={(e) => setFormInfo({ ...formInfo, name: e.target.value })}
+						/>
+					</label>
+
+					<label className="flex flex-col">
+						Tipo de pago
+						<Select
+							value={formInfo?.type}
+							onChange={(type) => setFormInfo({ ...formInfo, type })}
+							items={[
+								{ value: PayMethods.EFECTIVO, label: PayMethods.EFECTIVO },
+								{ value: PayMethods.TRANSFERENCIA, label: PayMethods.TRANSFERENCIA },
+							]}
+						/>
+					</label>
+
+					<label className="flex flex-col">
+						Menú
+						<Select
+							value={formInfo?.menu}
+							onChange={selectMenu}
+							items={menus}
+							valueKey="menu"
+							labelKey="menu"
+						/>
+					</label>
+
+					<label>
+						Descripción
+						<TextField.Root
+							radius="large"
+							className={`w-full`}
+							value={formInfo?.description}
+							onChange={(e) => setFormInfo({ ...formInfo, description: e.target.value })}
+						/>
+					</label>
+				</div>
+				<div className="flex w-full justify-between mt-4">
+					<Popover
+						trigger={
+							<Button className={isNew ? '!invisible' : ''} color="red" variant="soft">
+								Eliminar
+							</Button>
+						}
+						content={
+							<span className="flex items-center flex-col gap-2">
+								¿Estás seguro de borrar este pedido?
+								<RPopover.Close>
+									<Button color="red" variant="solid" onClick={() => deleteRequest(info)}>
+										Confirmar
+									</Button>
+								</RPopover.Close>
+							</span>
+						}
+					/>
+
+					<Button
+						disabled={!formInfo?.name || !formInfo?.type || !formInfo?.menu}
+						onClick={isNew ? addNewReq : acceptEdition}
+					>
+						{isNew ? 'Crear' : 'Editar'}
+					</Button>
+				</div>
+			</Modal>
+		</div>
+	);
 }
 
 export default CardRequest;

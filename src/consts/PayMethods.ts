@@ -1,4 +1,4 @@
 export enum PayMethods {
-  EFECTIVO = 'Efectivo',
-  TRANSFERENCIA = 'Transferencia',
+	EFECTIVO = 'Efectivo',
+	TRANSFERENCIA = 'Transferencia',
 }

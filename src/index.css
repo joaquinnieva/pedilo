@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+	--color-card: #313a49;
+}
+
+@layer base {
+	.rt-BaseButton {
+		cursor: pointer !important;
+	}
+	.app-bg {
+		background-color: #2a323c;
+	}
+	.interpolate-size {
+		interpolate-size: allow-keywords;
+	}
+}

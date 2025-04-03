@@ -6,14 +6,14 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyDXksKWsgN4iUl86F3sl9c6IIgtUh5oxgA',
-  authDomain: 'pedilo-box.firebaseapp.com',
-  projectId: 'pedilo-box',
-  storageBucket: 'pedilo-box.appspot.com',
-  messagingSenderId: '332235951994',
-  appId: '1:332235951994:web:af42c33f44fd03109650c3',
+	apiKey: 'AIzaSyDXksKWsgN4iUl86F3sl9c6IIgtUh5oxgA',
+	authDomain: 'pedilo-box.firebaseapp.com',
+	projectId: 'pedilo-box',
+	storageBucket: 'pedilo-box.appspot.com',
+	messagingSenderId: '332235951994',
+	appId: '1:332235951994:web:af42c33f44fd03109650c3',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app)
+export const db = getFirestore(app);

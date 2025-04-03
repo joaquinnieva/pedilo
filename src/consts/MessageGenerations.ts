@@ -1,5 +1,5 @@
 export enum MessageGenerations {
-  WP = 'wp',
-  PREVIEW = 'preview',
-  COPY = 'copy',
+	WP = 'wp',
+	PREVIEW = 'preview',
+	COPY = 'copy',
 }
