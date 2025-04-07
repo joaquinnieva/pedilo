@@ -7,10 +7,10 @@ import '@radix-ui/themes/styles.css';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
-	<StrictMode>
-		<Theme appearance="dark">
-			<App />
-		</Theme>
-		<Toaster position="bottom-right" />
-	</StrictMode>,
+  <StrictMode>
+    <Theme appearance="dark">
+      <App />
+    </Theme>
+    <Toaster position="bottom-right" richColors />
+  </StrictMode>
 );
