@@ -29,20 +29,28 @@ export default function App() {
 	});
 
 	return (
-		<section className="w-full app-bg">
-			<Navbar requests={requests} />
-			<main className="dark flex min-h-[calc(100vh-64px)] flex-col w-full items-center px-4">
-				<MenuContainers state={[menus]} />
-				<RequestContainer state={[requests]} menus={menus} />
-			</main>
+		<div className="relative w-screen h-screen">
+			<div className="-z-1">
+				<div className="shape-blob"></div>
+				<div className="shape-blob one"></div>
+				<div className="shape-blob two"></div>
+			</div>
 
-			{(loadMenus || loadReq) && (
-				<div className="h-screen w-screen grid fixed z-10 top-0 left-0 place-content-center bg-gray-900/10 backdrop-blur-sm">
-					<span className="flex items-center gap-2">
-						<Spinner /> Actualizando información
-					</span>
-				</div>
-			)}
-		</section>
+			<section className="w-full app-bg z-10">
+				<Navbar requests={requests} />
+				<main className="dark flex min-h-[calc(100vh-64px)] flex-col w-full items-center px-4">
+					<MenuContainers state={[menus]} />
+					<RequestContainer state={[requests]} menus={menus} />
+				</main>
+
+				{(loadMenus || loadReq) && (
+					<div className="h-screen w-screen grid fixed z-10 top-0 left-0 place-content-center bg-gray-900/10 backdrop-blur-sm">
+						<span className="flex items-center gap-2">
+							<Spinner /> Actualizando información
+						</span>
+					</div>
+				)}
+			</section>
+		</div>
 	);
 }

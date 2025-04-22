@@ -1,17 +1,89 @@
 @import "tailwindcss";
 
 @theme {
-	--color-card: #313a49;
+  --color-card: #313a49;
 }
 
 @layer base {
-	.rt-BaseButton {
-		cursor: pointer !important;
-	}
-	.app-bg {
-		background-color: #2a323c;
-	}
-	.interpolate-size {
-		interpolate-size: allow-keywords;
-	}
+  .rt-BaseButton {
+    cursor: pointer !important;
+  }
+  .interpolate-size {
+    interpolate-size: allow-keywords;
+  }
+  .app-bg {
+    background: #151666;
+    background: linear-gradient(0deg, #151666 0%, #140320 30%, #140320 100%);
+  }
+
+  .shape-blob {
+    background: #151666;
+    height: 200px;
+    width: 200px;
+    border-radius: 30% 50% 20% 40%;
+    animation: transform 20s ease-in-out infinite both alternate,
+      movement_one 40s ease-in-out infinite both;
+    opacity: 0.5;
+    position: absolute;
+    left: 60%;
+    top: 50%;
+  }
+  .shape-blob.one {
+    height: 500px;
+    width: 500px;
+    left: -200px;
+    top: 150px;
+    transform: rotate(-180deg);
+    animation: transform 30s ease-in-out infinite both alternate,
+      movement_two 60s ease-in-out infinite both;
+  }
+
+  .shape-blob.two {
+    height: 350px;
+    width: 350px;
+    left: 600px;
+    top: -150px;
+    transform: rotate(-180deg);
+    animation: transform 30s ease-in-out infinite both alternate,
+      movement_two 60s ease-in-out infinite both;
+  }
+
+  @keyframes transform {
+    0%,
+    100% {
+      border-radius: 33% 67% 70% 30% / 30% 30% 70% 70%;
+    }
+    20% {
+      border-radius: 37% 63% 51% 49% / 37% 65% 35% 63%;
+    }
+    40% {
+      border-radius: 36% 64% 64% 36% / 64% 48% 52% 36%;
+    }
+    60% {
+      border-radius: 37% 63% 51% 49% / 30% 30% 70% 70%;
+    }
+    80% {
+      border-radius: 40% 60% 42% 58% / 41% 51% 49% 59%;
+    }
+  }
+
+  @keyframes movement_one {
+    0%,
+    100% {
+      transform: none;
+    }
+    50% {
+      transform: translate(50%, 20%) rotateY(10deg) scale(1.2);
+    }
+  }
+
+  @keyframes movement_two {
+    0%,
+    500% {
+      transform: none;
+    }
+    50% {
+      transform: translate(50%, 20%) rotate(-200deg) scale(1.2);
+    }
+  }
 }

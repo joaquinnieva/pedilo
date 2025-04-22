@@ -4,9 +4,9 @@ import { MenuMessage, PreviewRequest, RequestModal } from '..';
 
 export default function Nav({ requests, getData }: any) {
 	return (
-		<nav className="w-full flex justify-between px-8 py-4">
-			<span className="">📦 Pedilo!</span>
-			<header className="hidden sm:flex gap-3 items-center">
+		<nav className="w-full flex justify-between px-8 py-4 z-100">
+			<span className="z-10">📦 Pedilo!</span>
+			<header className="hidden sm:flex gap-3 items-center z-10">
 				<RequestModal spinOptions={requests?.map((req: any) => ({ option: req.name }))} />
 
 				<PreviewRequest requests={requests} />
