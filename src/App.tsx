@@ -4,8 +4,12 @@ import { collection, query } from 'firebase/firestore';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { db } from './firebase/config';
 import { parseCustomDate } from './functions/DateUtils';
+import { useLocalStorage } from './hooks/useStorage';
+import { useEffect } from 'react';
 
 export default function App() {
+	const [name, setName] = useLocalStorage('name', '');
+
 	const menusQuery = query(collection(db, 'menu'));
 	const [menu, loadMenus] = useCollectionData(menusQuery, {
 		initialValue: [],
@@ -28,16 +32,17 @@ export default function App() {
 		return dateA.getTime() - dateB.getTime();
 	});
 
+	useEffect(() => {}, [name]);
 	return (
 		<div className="relative w-screen h-screen">
-			<div className="-z-1">
+			{/* <div className="-z-1">
 				<div className="shape-blob"></div>
 				<div className="shape-blob one"></div>
 				<div className="shape-blob two"></div>
-			</div>
+			</div> */}
 
 			<section className="w-full app-bg z-10">
-				<Navbar requests={requests} />
+				<Navbar requests={requests} nameState={[name, setName]} />
 				<main className="dark flex min-h-[calc(100vh-64px)] flex-col w-full items-center px-4">
 					<MenuContainers state={[menus]} />
 					<RequestContainer state={[requests]} menus={menus} />

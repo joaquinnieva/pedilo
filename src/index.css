@@ -5,6 +5,15 @@
 }
 
 @layer base {
+  .bounce {
+    transform: scale(1);
+    @starting-style{
+      transform:scale(1)
+    }
+  }
+
+  
+
   .rt-BaseButton {
     cursor: pointer !important;
   }
@@ -12,8 +21,10 @@
     interpolate-size: allow-keywords;
   }
   .app-bg {
-    background: #151666;
-    background: linear-gradient(0deg, #151666 0%, #140320 30%, #140320 100%);
+    background: #1d1e85;
+    background-image: url("./assets/bg.png");
+    background-size: cover;
+    background-position: center;
   }
 
   .shape-blob {

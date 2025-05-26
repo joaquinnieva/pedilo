@@ -65,7 +65,7 @@ function PreviewRequest({ requests }: { requests: any }) {
 					Previsualizar mensaje
 				</Dialog.Title>
 				<div className="w-full">
-					<div className="mb-2 rounded bg-foreground-50/50 p-4 border border-foreground-50 whitespace-pre-line">
+					<div className="mb-2 rounded-md bg-foreground-50/50 p-4 border border-gray-500/50 whitespace-pre-line">
 						{text}
 					</div>
 				</div>

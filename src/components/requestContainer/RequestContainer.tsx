@@ -77,7 +77,7 @@ function RequestContainer({ state, menus }: any) {
       </Separator>
       <div className="flex flex-wrap w-full">
         {requests?.map((info: any, i: number) => (
-          <CardRequest key={i} info={info} menus={menus} deleteReq={deleteReq} />
+          <CardRequest key={i} info={info} menus={menus} deleteReq={deleteReq} addReq={addReq} />
         ))}
         <CardRequest isNew addReq={addReq} menus={menus} />
       </div>

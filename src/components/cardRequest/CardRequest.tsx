@@ -4,12 +4,13 @@ import { getRequests } from '@/firebase/service';
 import { getDateString, isToday } from '@/functions/DateUtils';
 import { Badge, Button, Popover as RPopover, TextField, Tooltip } from '@radix-ui/themes';
 import { doc, updateDoc } from 'firebase/firestore';
-import { Pencil, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { Copy, Pencil, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Modal, Popover, Select } from '..';
 
 function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: any) {
+	const name = JSON.parse(localStorage.getItem('name') || 'null');
 	const [formInfo, setFormInfo] = useState(info);
 	const [isOpen, setOpen] = useState(false);
 	const onOpenChange = () => setOpen(!isOpen);
@@ -79,11 +80,23 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 				{!isNew ? (
 					<div
 						onClick={() => isOwnReq() && onOpen()}
-						className="cursor-pointer flex shadow-lg rounded-lg h-full bg-card/50 hover:border-gray-500 border-gray-500/50 border p-3 gap-1 flex-col relative text-sm backdrop-blur-xs"
+						className="cursor-pointer bounce flex shadow-lg rounded-lg h-full bg-card/50 hover:border-gray-500 border-gray-500/50 border p-3 gap-1 flex-col relative text-sm backdrop-blur-xs"
 					>
-						{isOwnReq() && (
+						{isOwnReq() ? (
 							<div className="absolute right-3 p-1 z-10 cursor-pointer">
 								<Pencil className="w-4 h-4" />
+							</div>
+						) : (
+							<div
+								className="absolute right-3 p-1 z-10 cursor-pointer"
+								onClick={(e) => {
+									e.stopPropagation();
+									console.log('copy', { ...formInfo, name });
+									onOpen();
+									setFormInfo({ ...formInfo, name });
+								}}
+							>
+								<Copy className="w-4 h-4" />
 							</div>
 						)}
 						<div className="text-primary-300 font-semibold text-base">{info?.name}</div>
@@ -92,7 +105,11 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 							{info?.description ? `, ${info?.description}` : ''}
 						</div>
 						<div className="text-gray flex justify-between w-full">
-							<Badge color={info?.type === PayMethods.EFECTIVO ? 'green' : 'blue'}>{info?.type} </Badge>
+							<div>
+								<Badge color={info?.type === PayMethods.EFECTIVO ? 'green' : 'blue'}>
+									${info?.price} {info?.type}{' '}
+								</Badge>
+							</div>
 							<div className="text-xs flex items-center gap-2">
 								{info?.date}
 								{isToday(info?.date) && (
@@ -116,7 +133,11 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 				)}
 			</Tooltip>
 
-			<Modal open={isOpen} onOpenChange={closeModal} title={isNew ? 'Crear pedido' : 'Editar pedido'}>
+			<Modal
+				open={isOpen}
+				onOpenChange={closeModal}
+				title={isOwnReq() ? (isNew ? 'Crear pedido' : 'Editar pedido') : 'Crear pedido'}
+			>
 				<div className="flex flex-col gap-3">
 					<label>
 						Nombre
@@ -124,6 +145,7 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 							radius="large"
 							className={`w-full`}
 							value={formInfo?.name}
+							defaultValue={name}
 							onChange={(e) => setFormInfo({ ...formInfo, name: e.target.value })}
 						/>
 					</label>
@@ -164,7 +186,11 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 				<div className="flex w-full justify-between mt-4">
 					<Popover
 						trigger={
-							<Button className={isNew ? '!invisible' : ''} color="red" variant="soft">
+							<Button
+								className={isOwnReq() ? (isNew ? '!invisible' : '') : '!invisible'}
+								color="red"
+								variant="soft"
+							>
 								Eliminar
 							</Button>
 						}
@@ -182,9 +208,9 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 
 					<Button
 						disabled={!formInfo?.name || !formInfo?.type || !formInfo?.menu}
-						onClick={isNew ? addNewReq : acceptEdition}
+						onClick={isOwnReq() ? (isNew ? addNewReq : acceptEdition) : addNewReq}
 					>
-						{isNew ? 'Crear' : 'Editar'}
+						{isOwnReq() ? (isNew ? 'Crear' : 'Editar') : 'Crear'}
 					</Button>
 				</div>
 			</Modal>
