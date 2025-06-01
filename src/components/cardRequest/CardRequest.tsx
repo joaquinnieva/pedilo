@@ -5,9 +5,10 @@ import { getDateString, isToday } from '@/functions/DateUtils';
 import { Badge, Button, Popover as RPopover, TextField, Tooltip } from '@radix-ui/themes';
 import { doc, updateDoc } from 'firebase/firestore';
 import { Copy, Pencil, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { Modal, Popover, Select } from '..';
+import AnimatedContent from '../animatedContent/AnimatedContent';
 
 function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: any) {
 	const name = JSON.parse(localStorage.getItem('name') || 'null');
@@ -15,7 +16,7 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 	const [isOpen, setOpen] = useState(false);
 	const onOpenChange = () => setOpen(!isOpen);
 	const onOpen = () => {
-		setFormInfo(info);
+		setFormInfo({ ...info, name });
 		setOpen(true);
 	};
 
@@ -76,62 +77,72 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 	};
 	return (
 		<div className="p-4 w-1/4">
-			<Tooltip content={info?.name} hidden={!info?.menu}>
-				{!isNew ? (
-					<div
-						onClick={() => isOwnReq() && onOpen()}
-						className="cursor-pointer bounce flex shadow-lg rounded-lg h-full bg-card/50 hover:border-gray-500 border-gray-500/50 border p-3 gap-1 flex-col relative text-sm backdrop-blur-xs"
-					>
-						{isOwnReq() ? (
-							<div className="absolute right-3 p-1 z-10 cursor-pointer">
-								<Pencil className="w-4 h-4" />
+			<AnimatedContent
+				distance={0}
+				direction="horizontal"
+				reverse={false}
+				duration={1}
+				ease="bounce.out"
+				initialOpacity={0.2}
+				animateOpacity
+				scale={1.1}
+			>
+				<Tooltip content={info?.name} hidden={!info?.menu}>
+					{!isNew ? (
+						<div
+							onClick={() => isOwnReq() && onOpen()}
+							className="cursor-pointer bounce flex shadow-lg rounded-lg h-full bg-card/50 hover:border-gray-500 border-gray-500/50 border p-3 gap-1 flex-col relative text-sm backdrop-blur-xs"
+						>
+							{isOwnReq() ? (
+								<div className="absolute right-3 p-1 z-10 cursor-pointer">
+									<Pencil className="w-4 h-4" />
+								</div>
+							) : (
+								<div
+									className="absolute right-3 p-1 z-10 cursor-pointer"
+									onClick={(e) => {
+										e.stopPropagation();
+										onOpen();
+										setFormInfo({ ...formInfo, name });
+									}}
+								>
+									<Copy className="w-4 h-4" />
+								</div>
+							)}
+							<div className="text-primary-300 font-semibold text-base">{info?.name}</div>
+							<div className="text-gray flex-1">
+								{info?.menu}
+								{info?.description ? `, ${info?.description}` : ''}
 							</div>
-						) : (
-							<div
-								className="absolute right-3 p-1 z-10 cursor-pointer"
-								onClick={(e) => {
-									e.stopPropagation();
-									console.log('copy', { ...formInfo, name });
-									onOpen();
-									setFormInfo({ ...formInfo, name });
-								}}
-							>
-								<Copy className="w-4 h-4" />
-							</div>
-						)}
-						<div className="text-primary-300 font-semibold text-base">{info?.name}</div>
-						<div className="text-gray flex-1">
-							{info?.menu}
-							{info?.description ? `, ${info?.description}` : ''}
-						</div>
-						<div className="text-gray flex justify-between w-full">
-							<div>
-								<Badge color={info?.type === PayMethods.EFECTIVO ? 'green' : 'blue'}>
-									${info?.price} {info?.type}{' '}
-								</Badge>
-							</div>
-							<div className="text-xs flex items-center gap-2">
-								{info?.date}
-								{isToday(info?.date) && (
-									<Badge variant="outline" color="amber">
-										HOY
+							<div className="text-gray flex justify-between w-full">
+								<div>
+									<Badge color={info?.type === PayMethods.EFECTIVO ? 'green' : 'blue'}>
+										${info?.price} {info?.type}{' '}
 									</Badge>
-								)}
+								</div>
+								<div className="text-xs flex items-center gap-2">
+									{info?.date}
+									{isToday(info?.date) && (
+										<Badge variant="outline" color="amber">
+											HOY
+										</Badge>
+									)}
+								</div>
 							</div>
 						</div>
-					</div>
-				) : (
-					<div
-						onClick={onOpen}
-						className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card/50 hover:border-gray-500 border-gray-500/50 border group backdrop-blur-xs"
-					>
-						<Plus />
-						<p className="w-0 h-6 group-hover:w-auto interpolate-size transition-all overflow-hidden ">
-							Agregar pedido
-						</p>
-					</div>
-				)}
-			</Tooltip>
+					) : (
+						<div
+							onClick={onOpen}
+							className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card/50 hover:border-gray-500 border-gray-500/50 border group backdrop-blur-xs"
+						>
+							<Plus />
+							<p className="w-0 h-6 group-hover:w-auto interpolate-size transition-all overflow-hidden ">
+								Agregar pedido
+							</p>
+						</div>
+					)}
+				</Tooltip>
+			</AnimatedContent>
 
 			<Modal
 				open={isOpen}
@@ -207,7 +218,7 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 					/>
 
 					<Button
-						disabled={!formInfo?.name || !formInfo?.type || !formInfo?.menu}
+						disabled={!formInfo?.name || !name || !formInfo?.type || !formInfo?.menu}
 						onClick={isOwnReq() ? (isNew ? addNewReq : acceptEdition) : addNewReq}
 					>
 						{isOwnReq() ? (isNew ? 'Crear' : 'Editar') : 'Crear'}

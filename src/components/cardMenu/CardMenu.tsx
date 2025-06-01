@@ -7,6 +7,7 @@ import { DollarSign, Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Modal, Popover } from '..';
+import AnimatedContent from '../animatedContent/AnimatedContent';
 
 function CardMenu({ info = null, deleteMenu, addMenu, isNew = false }: any) {
 	const [formInfo, setFormInfo] = useState(info);
@@ -46,35 +47,46 @@ function CardMenu({ info = null, deleteMenu, addMenu, isNew = false }: any) {
 
 	return (
 		<div className="p-4 w-1/4 text-white">
-			<Tooltip content={info?.menu} hidden={!info?.menu}>
-				{!isNew ? (
-					<div
-						onClick={onOpen}
-						className="cursor-pointer flex flex-col gap-2 shadow-lg rounded-lg h-full p-3 relative bg-card/50 hover:border-gray-500 border-gray-500/50 border backdrop-blur-xs"
-					>
-						<div className="absolute right-3 p-1 cursor-pointer">
-							<Pencil className="w-4 h-4" />
+			<AnimatedContent
+				distance={0}
+				direction="horizontal"
+				reverse={false}
+				duration={1}
+				ease="bounce.out"
+				initialOpacity={0.2}
+				animateOpacity
+				scale={1.1}
+			>
+				<Tooltip content={info?.menu} hidden={!info?.menu}>
+					{!isNew ? (
+						<div
+							onClick={onOpen}
+							className="cursor-pointer flex flex-col gap-2 shadow-lg rounded-lg h-full p-3 relative bg-card/50 hover:border-gray-500 border-gray-500/50 border backdrop-blur-xs"
+						>
+							<div className="absolute right-3 p-1 cursor-pointer">
+								<Pencil className="w-4 h-4" />
+							</div>
+							<div className="text-primary-300 font-semibold flex items-center gap-2">
+								${info?.price}{' '}
+								<p className="text-xs text-gray-400 font-normal">({info?.date || 'viejaso'})</p>
+							</div>
+							<div className="text-gray truncate text-sm">
+								{info?.menu.charAt(0).toUpperCase() + info?.menu.slice(1)}
+							</div>
 						</div>
-						<div className="text-primary-300 font-semibold flex items-center gap-2">
-							${info?.price}{' '}
-							<p className="text-xs text-gray-400 font-normal">({info?.date || 'viejaso'})</p>
+					) : (
+						<div
+							onClick={onOpen}
+							className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card/50 hover:border-gray-500 border-gray-500/50 border group backdrop-blur-xs"
+						>
+							<Plus />
+							<p className="w-0 h-6 group-hover:w-auto interpolate-size transition-all overflow-hidden ">
+								Agregar menu
+							</p>
 						</div>
-						<div className="text-gray truncate text-sm">
-							{info?.menu.charAt(0).toUpperCase() + info?.menu.slice(1)}
-						</div>
-					</div>
-				) : (
-					<div
-						onClick={onOpen}
-						className="flex shadow-lg rounded-lg gap-2 h-full py-4 justify-center items-center cursor-pointer bg-card/50 hover:border-gray-500 border-gray-500/50 border group backdrop-blur-xs"
-					>
-						<Plus />
-						<p className="w-0 h-6 group-hover:w-auto interpolate-size transition-all overflow-hidden ">
-							Agregar menu
-						</p>
-					</div>
-				)}
-			</Tooltip>
+					)}
+				</Tooltip>
+			</AnimatedContent>
 
 			<Modal open={isOpen} onOpenChange={closeModal} title={isNew ? 'Crear menu' : 'Editar menu'}>
 				<div className="w-full">
