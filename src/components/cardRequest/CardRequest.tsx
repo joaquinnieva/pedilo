@@ -21,12 +21,9 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 	};
 
 	const isOwnReq = () => {
-		if (localStorage?.getItem?.('admin')) return true;
-
-		const prevReqs = localStorage?.getItem?.('prevReqs')
-			? JSON.parse(localStorage?.getItem?.('prevReqs') || '')
-			: { value: [] };
-		return prevReqs?.value.includes(info?.name);
+		// if (localStorage?.getItem?.('admin')) return true;
+		const prevReqs = JSON.parse(localStorage.getItem('name') || 'null');
+		return prevReqs === info?.name;
 	};
 
 	const closeModal = () => {
