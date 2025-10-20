@@ -46,17 +46,8 @@ function CardMenu({ info = null, deleteMenu, addMenu, isNew = false }: any) {
 	};
 
 	return (
-		<div className="p-2 w-1/4 text-white">
-			<AnimatedContent
-				distance={0}
-				direction="horizontal"
-				reverse={false}
-				duration={1}
-				ease="bounce.out"
-				initialOpacity={0.2}
-				animateOpacity
-				scale={1.1}
-			>
+		<div className="p-2 w-1/5 text-white">
+			<AnimatedContent distance={0} direction="horizontal" reverse={false}>
 				<Tooltip content={info?.menu} hidden={!info?.menu}>
 					{!isNew ? (
 						<div
