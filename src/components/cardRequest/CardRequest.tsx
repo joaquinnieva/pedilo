@@ -74,16 +74,7 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 	};
 	return (
 		<div className="p-2 w-1/4">
-			<AnimatedContent
-				distance={0}
-				direction="horizontal"
-				reverse={false}
-				duration={1}
-				ease="bounce.out"
-				initialOpacity={0.2}
-				animateOpacity
-				scale={1.1}
-			>
+			<AnimatedContent distance={0} direction="horizontal" reverse={false}>
 				<Tooltip content={info?.name} hidden={!info?.menu}>
 					{!isNew ? (
 						<div
