@@ -46,7 +46,7 @@ function CardMenu({ info = null, deleteMenu, addMenu, isNew = false }: any) {
 	};
 
 	return (
-		<div className="p-4 w-1/4 text-white">
+		<div className="p-2 w-1/4 text-white">
 			<AnimatedContent
 				distance={0}
 				direction="horizontal"

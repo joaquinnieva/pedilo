@@ -36,7 +36,7 @@ function MenuContainers({ state }: any) {
           </div>
         </div>
       </Separator>
-      <div className="flex flex-wrap w-full">
+      <div className="flex flex-wrap w-full mt-2">
         {menus?.map((info: any, i: number) => (
           <CardMenu key={i} info={info} deleteMenu={deleteMenu} />
         ))}

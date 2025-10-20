@@ -7,8 +7,9 @@ export default function Navbar({ requests, getData, nameState }: any) {
 	const [name, setName] = nameState;
 	const [nameAux, setNameAux] = useState(name);
 	const [opened, setOpened] = useState(!name);
+
 	return (
-		<nav className="w-full flex justify-between px-8 py-4 z-100">
+		<nav className="w-full flex justify-between px-6 py-4 z-100">
 			<div className="z-10 flex items-center gap-2 !text-base">
 				<span className="">📦 Pedilo</span>
 				<Dialog.Root onOpenChange={setOpened} open={opened}>
@@ -45,7 +46,7 @@ export default function Navbar({ requests, getData, nameState }: any) {
 			</div>
 
 			<header className="hidden sm:flex gap-3 items-center z-10">
-				<RequestModal spinOptions={requests?.map((req: any) => ({ option: req.name }))} />
+				<RequestModal spinOptions={requests?.map((req: any) => req.name)} />
 
 				<PreviewRequest requests={requests} />
 

@@ -73,7 +73,7 @@ function CardRequest({ info = null, menus, deleteReq, addReq, isNew = false }: a
 		closeModal();
 	};
 	return (
-		<div className="p-4 w-1/4">
+		<div className="p-2 w-1/4">
 			<AnimatedContent
 				distance={0}
 				direction="horizontal"
