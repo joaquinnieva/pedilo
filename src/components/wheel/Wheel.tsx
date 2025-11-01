@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 export function PrizeWheel({
 	participants = [],
-	onChange,
 }: {
 	participants: string[];
-	onChange: (winner: string) => void;
 }) {
 	const [isSpinning, setIsSpinning] = useState(false);
 	const [rotation, setRotation] = useState(0);
@@ -22,12 +20,17 @@ export function PrizeWheel({
 
 	const spinWheel = () => {
 		if (isSpinning || participants.length === 0) return;
-
-		const winnerIndex = parseInt(String(Date.now()).slice(-1)) % participants.length;
-		const selectedWinner = participants[winnerIndex];
-		setWinner(selectedWinner);
-
 		setIsSpinning(true);
+
+		const winnerIndex = Math.floor(Math.random() * participants.length);
+		const selectedWinner = participants[winnerIndex];
+		setWinner((prev) => {
+			if (selectedWinner === prev) {
+				return participants[Math.floor(Math.random() * participants.length)];;
+			}
+			return selectedWinner;
+		});
+
 
 		const spinDuration = 4000;
 		const minSpins = 4;
@@ -59,7 +62,6 @@ export function PrizeWheel({
 
 			setTimeout(() => {
 				handleClick();
-				onChange(selectedWinner);
 			}, 3500);
 		};
 		animate();
@@ -143,11 +145,6 @@ export function PrizeWheel({
 		};
 		drawWheel();
 	}, [rotation]);
-	useEffect(() => {
-		setRotation(0);
-		setWinner(participants[0]);
-		setIsSpinning(false);
-	}, [participants]);
 
 	return (
 		<div className="w-full mx-auto">

@@ -10,7 +10,6 @@ import { useLocalStorage } from './hooks/useStorage';
 export default function App() {
 	const [updating, setUpdating] = useState(0);
 	const [name, setName] = useLocalStorage('name', '');
-	const [lastWinner, setLastWinner] = useState('');
 
 	const menusQuery = query(collection(db, 'menu'));
 	const [menu, loadMenus] = useCollectionData(menusQuery, {
@@ -34,28 +33,11 @@ export default function App() {
 		return dateA.getTime() - dateB.getTime();
 	});
 
-	const info = query(collection(db, 'info'));
-	const [data] = useCollectionData(info, {
-		initialValue: [],
-		snapshotListenOptions: { includeMetadataChanges: true },
-	});
-	const winner = data?.[1];
-
-	useEffect(() => {
-		winner?.winner && setLastWinner(winner?.winner);
-	}, [winner?.winner]);
-
 	useEffect(() => {
 		setUpdating((c) => c + 1);
 	}, [name]);
 	return (
 		<div className="relative w-screen h-screen overflow-x-hidden">
-			{lastWinner && (
-				<div className="absolute top-2 z-100 right-1/2 p-2 rounded-md shadow-md">
-					<p className="text-lg text-white">Ultimo sorteo: {lastWinner}</p>
-				</div>
-			)}
-
 			<section className="w-screen bg-gray-800 z-10">
 				<Navbar requests={requests} nameState={[name, setName]} />
 				<main
