@@ -24,8 +24,8 @@ export function PrizeWheel({
 
 		const winnerIndex = Math.floor(Math.random() * participants.length);
 		const selectedWinner = participants[winnerIndex];
-		setWinner((prev) => {
-			if (selectedWinner === prev) {
+		setWinner(() => {
+			if (selectedWinner === winner) {
 				return participants[Math.floor(Math.random() * participants.length)];;
 			}
 			return selectedWinner;
@@ -164,10 +164,8 @@ export function PrizeWheel({
 					/>
 				</div>
 
-				<div className="flex justify-between w-full">
-					<p className="text-primary">
-						Resultado: <b>{winner}</b>
-					</p>
+				<div className="flex justify-end w-full">
+					
 					<Button
 						onClick={spinWheel}
 						disabled={isSpinning || participants.length === 0}
