@@ -1,8 +1,5 @@
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import React, { ReactNode, useEffect, useRef } from 'react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { type ReactNode, useEffect, useRef } from 'react';
 
 interface AnimatedContentProps {
 	children: ReactNode;
@@ -14,12 +11,11 @@ interface AnimatedContentProps {
 	initialOpacity?: number;
 	animateOpacity?: boolean;
 	scale?: number;
-	threshold?: number;
 	delay?: number;
 	onComplete?: () => void;
 }
 
-const AnimatedContent: React.FC<AnimatedContentProps> = ({
+const AnimatedContent = ({
 	children,
 	distance = 100,
 	direction = 'vertical',
@@ -29,10 +25,9 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
 	initialOpacity = 0,
 	animateOpacity = true,
 	scale = 1.05,
-	threshold = 0.1,
 	delay = 0,
 	onComplete,
-}) => {
+}: AnimatedContentProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -53,7 +48,7 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
 			scale: 1,
 			opacity: 1,
 			duration,
-			ease: 'expo.in',
+			ease,
 			delay,
 			onComplete,
 		});
@@ -66,7 +61,6 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
 		initialOpacity,
 		animateOpacity,
 		scale,
-		threshold,
 		delay,
 		onComplete,
 	]);

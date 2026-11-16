@@ -1,73 +1,50 @@
 import { MessageGenerations } from '@/consts/MessageGenerations';
-import { PayMethods } from '@/consts/PayMethods';
+import type { OrderRequest } from '@/types';
 
-const groupBy = function (xs: any[]) {
-	return Object.entries(
-		xs.reduce((rv: { [x: string]: number }, x: { [x: string]: string | number }) => {
-			const key = `${x['menu']}${x['description'] ?", "+ x['description'] : ''}`;
-			rv[key] = (rv[key] ?? 0) + 1;
-			return rv;
-		}, {}),
-	);
+const groupBy = (items: OrderRequest[]): Array<[string, number]> => {
+	const counts = items.reduce<Record<string, number>>((acc, item) => {
+		const key = `${item.menu}${item.description ? `, ${item.description}` : ''}`;
+		acc[key] = (acc[key] ?? 0) + 1;
+		return acc;
+	}, {});
+
+	return Object.entries(counts);
 };
 
 export const FormatCartToText = ({
 	data = [],
 	action,
-	sendPrice,
-}: { data: any[]; action: MessageGenerations; sendPrice?: number }): string => {
-	const cart = data.sort((a: any, b: any) => {
-		if (a.type < b.type) {
-			return -1;
-		}
-		if (a.type > b.type) {
-			return 1;
-		}
-		return 0;
-	});
+	sendPrice = 0,
+}: {
+	data: OrderRequest[];
+	action: MessageGenerations;
+	sendPrice?: number;
+}): string => {
+	if (!data || data.length === 0) {
+		const fallback = 'Hola quisiera hacerte una consulta';
+		return action === MessageGenerations.WP ? encodeURIComponent(fallback) : fallback;
+	}
+
+	const cart = [...data].sort((a, b) => (a.type ?? '').localeCompare(b.type ?? ''));
+	const shipping = Number.isFinite(sendPrice) ? sendPrice : 0;
 
 	const total = cart.reduce(
-		(accumulator: number, product: any): number => accumulator + Number(product.price),
-		sendPrice,
+		(accumulator, product) => accumulator + (Number(product.price) || 0),
+		shipping,
 	);
-	const cash = cart.reduce(
-		(accumulator: number, product: any): number =>
-			product.type === PayMethods.EFECTIVO ? accumulator + Number(product.price) : accumulator + 0,
-		0,
-	);
-	const transfer = cart.reduce(
-		(accumulator: number, product: any): number =>
-			product.type === PayMethods.TRANSFERENCIA
-				? accumulator + Number(product.price)
-				: accumulator + 0,
-		0,
-	);
-	// const text = cart.reduce(
-	// 	(message: string, prod: any): string =>
-	// 		message.concat(
-	// 			`• ${prod.name}: ${prod.menu} ${prod?.description ? ',' + prod?.description : ''} - $${Number(prod.price)} ${prod?.type || PayMethods.EFECTIVO} \n`,
-	// 		),
-	// 	`Hola, buen día, este sería el pedido de Box: \n \n`,
-	// );
+
 	const text = groupBy(cart).reduce(
-		(message: string, prod: any): string =>
-			message.concat(
-				`• ${prod[0]}: ${prod[1]} \n`,
-			),
-		`Hola, buen día, este sería el pedido de Box: \n \n`,
+		(message, [label, count]) => message.concat(`• ${label}: ${count} \n`),
+		'Hola, buen día, este sería el pedido de Box: \n \n',
 	);
-	if (!text) return 'Hola quisiera hacerte una consulta';
 
-	const textWithTotals = text
-		// .concat(transfer === 0 ? '' : `\n| *${PayMethods.TRANSFERENCIA}* = $${transfer} |`)
-		// .concat(cash === 0 ? '' : `\n| *${PayMethods.EFECTIVO}* = $${cash} |`)
-		// .concat(sendPrice === 0 ? '' : `\n| *Envío* = ${sendPrice} |`)
-		.concat(`\nTotal: $${total}`);
+	const textWithTotals = text.concat(`\nTotal: $${total}`);
 
-	const ToSend = {
+	const toSend: Record<MessageGenerations, string> = {
 		[MessageGenerations.COPY]: textWithTotals,
 		[MessageGenerations.PREVIEW]: textWithTotals,
-		[MessageGenerations.WP]: textWithTotals?.replace(/\n/g, '%0A'),
+		[MessageGenerations.WP]: textWithTotals.replace(/\n/g, '%0A'),
 	};
-	return ToSend[action];
+
+	return toSend[action];
 };

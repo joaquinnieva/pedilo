@@ -1,101 +1,219 @@
 @import "tailwindcss";
 
 @theme {
-  --color-card: #313a49;
+	--color-card: #313a49;
+}
+
+:root {
+	--bg-base: #0b1020;
+	--bg-glow-1: rgba(99, 102, 241, 0.22);
+	--bg-glow-2: rgba(56, 189, 248, 0.14);
+	--surface-card: rgba(20, 28, 48, 0.72);
+	--surface-card-hover: rgba(28, 39, 66, 0.88);
+	--border-subtle: rgba(129, 140, 248, 0.2);
+	--accent-hex: #818cf8;
+	--accent-soft: rgba(129, 140, 248, 0.16);
+	--spotlight: rgba(129, 140, 248, 0.22);
 }
 
 @layer base {
-  .bounce {
-    transform: scale(1);
-    @starting-style{
-      transform:scale(1)
-    }
-  }
+	body {
+		background-color: var(--bg-base);
+		color: #f8fafc;
+		transition: background-color 0.35s ease;
+	}
 
-  
+	.rt-BaseButton {
+		cursor: pointer !important;
+	}
 
-  .rt-BaseButton {
-    cursor: pointer !important;
-  }
-  .interpolate-size {
-    interpolate-size: allow-keywords;
-  }
-  .app-bg {
-    background: #1d1e85;
-    background-image: url("./assets/bg.png");
-    background-size: cover;
-    background-position: center;
-    rotate: 180deg;
-  }
+	.interpolate-size {
+		interpolate-size: allow-keywords;
+	}
 
-  .shape-blob {
-    background: #151666;
-    height: 200px;
-    width: 200px;
-    border-radius: 30% 50% 20% 40%;
-    animation: transform 20s ease-in-out infinite both alternate,
-      movement_one 40s ease-in-out infinite both;
-    opacity: 0.5;
-    position: absolute;
-    left: 60%;
-    top: 50%;
-  }
-  .shape-blob.one {
-    height: 500px;
-    width: 500px;
-    left: -200px;
-    top: 150px;
-    transform: rotate(-180deg);
-    animation: transform 30s ease-in-out infinite both alternate,
-      movement_two 60s ease-in-out infinite both;
-  }
+	.app-mesh-bg {
+		background-color: var(--bg-base);
+		background-image: radial-gradient(
+				ellipse 80% 55% at 15% -10%,
+				var(--bg-glow-1),
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 70% 50% at 88% 10%,
+				var(--bg-glow-2),
+				transparent 65%
+			);
+		transition: background-color 0.35s ease;
+	}
 
-  .shape-blob.two {
-    height: 350px;
-    width: 350px;
-    left: 600px;
-    top: -150px;
-    transform: rotate(-180deg);
-    animation: transform 30s ease-in-out infinite both alternate,
-      movement_two 60s ease-in-out infinite both;
-  }
+	.card-surface {
+		background-color: var(--surface-card);
+		border-color: rgba(255, 255, 255, 0.09);
+		backdrop-filter: blur(12px);
+	}
 
-  @keyframes transform {
-    0%,
-    100% {
-      border-radius: 33% 67% 70% 30% / 30% 30% 70% 70%;
-    }
-    20% {
-      border-radius: 37% 63% 51% 49% / 37% 65% 35% 63%;
-    }
-    40% {
-      border-radius: 36% 64% 64% 36% / 64% 48% 52% 36%;
-    }
-    60% {
-      border-radius: 37% 63% 51% 49% / 30% 30% 70% 70%;
-    }
-    80% {
-      border-radius: 40% 60% 42% 58% / 41% 51% 49% 59%;
-    }
-  }
+	.card-surface:hover {
+		background-color: var(--surface-card-hover);
+		border-color: var(--border-subtle);
+	}
 
-  @keyframes movement_one {
-    0%,
-    100% {
-      transform: none;
-    }
-    50% {
-      transform: translate(50%, 20%) rotateY(10deg) scale(1.2);
-    }
-  }
+	.rt-DialogContent {
+		background-color: color-mix(in srgb, var(--bg-base) 82%, #1e293b 18%) !important;
+		border: 1px solid rgba(255, 255, 255, 0.12) !important;
+		box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.65) !important;
+		backdrop-filter: blur(18px);
+		animation: modalSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+	}
 
-  @keyframes movement_two {
-    0%,
-    500% {
-      transform: none;
-    }
-    50% {
-      transform: translate(50%, 20%) rotate(-200deg) scale(1.2);
-    }
-  }
+	.rt-DialogOverlay {
+		backdrop-filter: blur(6px);
+	}
+
+	@keyframes modalSlideIn {
+		from {
+			opacity: 0;
+			transform: translateY(8px) scale(0.97);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	@keyframes shine {
+		0% {
+			background-position: 100%;
+		}
+		100% {
+			background-position: -100%;
+		}
+	}
+
+	.animate-shine {
+		animation: shine 4s linear infinite;
+	}
+
+	@keyframes foodFloat {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(-6deg) scale(1);
+		}
+		33% {
+			transform: translate3d(14px, -22px, 0) rotate(6deg) scale(1.05);
+		}
+		66% {
+			transform: translate3d(-12px, -10px, 0) rotate(-3deg) scale(0.97);
+		}
+	}
+
+	.food-float {
+		animation-name: foodFloat;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes goldPulse {
+		0%,
+		100% {
+			box-shadow: 0 0 18px rgba(251, 191, 36, 0.28), inset 0 0 16px
+				rgba(251, 191, 36, 0.12);
+		}
+		50% {
+			box-shadow: 0 0 32px rgba(251, 191, 36, 0.55), inset 0 0 24px
+				rgba(251, 191, 36, 0.22);
+		}
+	}
+
+	@keyframes goldShimmer {
+		0% {
+			background-position: 140% 0;
+		}
+		100% {
+			background-position: -140% 0;
+		}
+	}
+
+	.card-winner {
+		background: linear-gradient(
+			135deg,
+			rgba(245, 158, 11, 0.24) 0%,
+			rgba(217, 119, 6, 0.1) 50%,
+			rgba(251, 191, 36, 0.22) 100%
+		) !important;
+		border-color: rgba(251, 191, 36, 0.8) !important;
+		animation: goldPulse 2.4s ease-in-out infinite;
+	}
+
+	.card-winner:hover {
+		background: linear-gradient(
+			135deg,
+			rgba(245, 158, 11, 0.3) 0%,
+			rgba(217, 119, 6, 0.14) 50%,
+			rgba(251, 191, 36, 0.28) 100%
+		) !important;
+		border-color: rgba(253, 224, 71, 0.95) !important;
+	}
+
+	.card-winner::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: linear-gradient(
+			110deg,
+			transparent 32%,
+			rgba(253, 224, 71, 0.22) 50%,
+			transparent 68%
+		);
+		background-size: 240% 100%;
+		pointer-events: none;
+		animation: goldShimmer 3.2s ease-in-out infinite;
+	}
+
+	.banner-glow {
+		border-color: var(--border-subtle) !important;
+		box-shadow: 0 8px 30px -12px var(--accent-soft);
+	}
+
+	.banner-glow::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: linear-gradient(
+			115deg,
+			transparent 35%,
+			var(--accent-soft) 50%,
+			transparent 65%
+		);
+		background-size: 260% 100%;
+		opacity: 0.45;
+		pointer-events: none;
+		animation: goldShimmer 6.5s ease-in-out infinite;
+	}
+
+	@keyframes megaphoneFloat {
+		0%,
+		100% {
+			transform: scale(1) rotate(0deg);
+		}
+		50% {
+			transform: scale(1.06) rotate(-6deg);
+		}
+	}
+
+	.megaphone-float {
+		animation: megaphoneFloat 3.6s ease-in-out infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.food-float,
+		.animate-shine,
+		.card-winner,
+		.card-winner::after,
+		.banner-glow::after,
+		.megaphone-float {
+			animation: none;
+		}
+	}
 }
