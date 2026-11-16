@@ -1,37 +1,47 @@
-import { collection, getDocs, query } from 'firebase/firestore';
+import type { AppInfo, MenuItem, OrderRequest } from '@/types';
+import {
+	type DocumentData,
+	type FirestoreDataConverter,
+	type QueryDocumentSnapshot,
+	type SnapshotOptions,
+	collection,
+	getDocs,
+	query,
+} from 'firebase/firestore';
 import { db } from './config';
 
-export const getMenus = () => {
-	const menus = collection(db, 'menu');
-	const q = query(menus);
+function createConverter<T extends { id: string }>(): FirestoreDataConverter<T> {
+	return {
+		toFirestore(item: T): DocumentData {
+			const { id: _id, ...rest } = item;
+			return rest;
+		},
+		fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): T {
+			return {
+				...(snapshot.data(options) as Omit<T, 'id'>),
+				id: snapshot.id,
+			} as T;
+		},
+	};
+}
 
-	return getDocs(q).then((resp) => {
-		return resp.docs
-			.map((doc) => {
-				return { ...doc.data(), id: doc.id };
-			})
-			.sort((a: any, b: any) => b.price - a.price);
-	});
+export const menusCollection = collection(db, 'menu').withConverter(createConverter<MenuItem>());
+export const requestsCollection = collection(db, 'requests').withConverter(
+	createConverter<OrderRequest>(),
+);
+export const infoCollection = collection(db, 'info').withConverter(createConverter<AppInfo>());
+
+export const getMenus = async (): Promise<MenuItem[]> => {
+	const resp = await getDocs(query(menusCollection));
+	return resp.docs.map((doc) => doc.data()).sort((a, b) => Number(b.price) - Number(a.price));
 };
 
-export const getRequests = () => {
-	const requests = collection(db, 'requests');
-	const requestsQuery = query(requests);
-
-	return getDocs(requestsQuery).then((resp) => {
-		return resp.docs.map((doc) => {
-			return { ...doc.data(), id: doc.id };
-		});
-	});
+export const getRequests = async (): Promise<OrderRequest[]> => {
+	const resp = await getDocs(query(requestsCollection));
+	return resp.docs.map((doc) => doc.data());
 };
 
-export const getInfo = () => {
-	const info = collection(db, 'info');
-	const infoQuery = query(info);
-
-	return getDocs(infoQuery).then((resp) => {
-		return resp.docs.map((doc) => {
-			return { ...doc.data(), id: doc.id };
-		});
-	});
+export const getInfo = async (): Promise<AppInfo[]> => {
+	const resp = await getDocs(query(infoCollection));
+	return resp.docs.map((doc) => doc.data());
 };
